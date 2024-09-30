@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotamManagement.Api", "NotamManagement.Api\NotamManagement.Api.csproj", "{8257A526-CA12-4455-8394-856D83313BE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotamManagement.UI", "NotamManagement.UI\NotamManagement.UI.csproj", "{D34635B7-0C6B-47CE-8C2F-6E890D4CB497}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotamManagement.Shared", "NotamManagement.Shared\NotamManagement.Shared.csproj", "{268848B1-33F2-4A34-BB7A-7E501EE1D178}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8257A526-CA12-4455-8394-856D83313BE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8257A526-CA12-4455-8394-856D83313BE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8257A526-CA12-4455-8394-856D83313BE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8257A526-CA12-4455-8394-856D83313BE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19E82E35-4A68-4D8B-B391-B01EBE4EAC19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19E82E35-4A68-4D8B-B391-B01EBE4EAC19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19E82E35-4A68-4D8B-B391-B01EBE4EAC19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19E82E35-4A68-4D8B-B391-B01EBE4EAC19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0552967C-9F18-4ADE-871C-5FA5F0E36B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0552967C-9F18-4ADE-871C-5FA5F0E36B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0552967C-9F18-4ADE-871C-5FA5F0E36B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0552967C-9F18-4ADE-871C-5FA5F0E36B36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D34635B7-0C6B-47CE-8C2F-6E890D4CB497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D34635B7-0C6B-47CE-8C2F-6E890D4CB497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D34635B7-0C6B-47CE-8C2F-6E890D4CB497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D34635B7-0C6B-47CE-8C2F-6E890D4CB497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{268848B1-33F2-4A34-BB7A-7E501EE1D178}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{268848B1-33F2-4A34-BB7A-7E501EE1D178}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{268848B1-33F2-4A34-BB7A-7E501EE1D178}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{268848B1-33F2-4A34-BB7A-7E501EE1D178}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
