@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotamManagement.Api", "Nota
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotamManagement.UI", "NotamManagement.UI\NotamManagement.UI.csproj", "{D34635B7-0C6B-47CE-8C2F-6E890D4CB497}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotamManagement.Shared", "NotamManagement.Shared\NotamManagement.Shared.csproj", "{268848B1-33F2-4A34-BB7A-7E501EE1D178}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotamManagement.Core", "NotamManagement.Core\NotamManagement.Core.csproj", "{268848B1-33F2-4A34-BB7A-7E501EE1D178}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
