@@ -6,9 +6,9 @@ public class Notam
     
     public DateTime ValidFrom { get; set; }
     
-    public DateTime ValidTo { get; set; }
+    public DateTime? ValidTo { get; set; }
     
-    public DateTime EffectiveValidTo { get; set; }
+    public DateTime? EffectiveValidTo { get; set; }
     
     public NotamType Type { get; set; }
     
@@ -18,7 +18,7 @@ public class Notam
     
     public required string Identifier  { get; set; }
     
-    public required string RefferenceIdentifier  { get; set; }
+    public required string ReferenceIdentifier { get; set; }
     
     public required string FIR { get; set; }
     
