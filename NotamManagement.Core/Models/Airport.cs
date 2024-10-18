@@ -7,4 +7,6 @@ public class Airport
     public required string ICAO { get; set; }
     
     public required string FIR { get; set; }
+
+    public List<FlightPlan>? FlightPlans { get; set; }
 }
