@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using NotamManagement.Core.Data;
+
 namespace NotamManagement.Api;
 
 public class Program
@@ -12,6 +15,8 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddDbContext<NotamManagementContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetRequiredSection("Database:ConnectionString").Value));
 
         var app = builder.Build();
 
