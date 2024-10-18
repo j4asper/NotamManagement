@@ -1,4 +1,4 @@
-﻿namespace NotamManagement.Shared.Models;
+﻿namespace NotamManagement.Core.Models;
 
 public class NotamAction
 {
@@ -6,9 +6,9 @@ public class NotamAction
     
     public int CustomerId { get; set; }
     
-    public Notam Notam { get; set; }
+    public required Notam Notam { get; set; }
     
     public Importance Importance { get; set; }
     
-    public string Note { get; set; }
+    public required string Note { get; set; }
 }

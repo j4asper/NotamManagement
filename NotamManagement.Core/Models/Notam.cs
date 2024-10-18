@@ -1,8 +1,8 @@
-﻿namespace NotamManagement.Shared.Models;
+﻿namespace NotamManagement.Core.Models;
 
 public class Notam
 {
-    public int Id { get; set; }
+    public required int Id { get; set; }
     
     public DateTime ValidFrom { get; set; }
     
@@ -12,17 +12,17 @@ public class Notam
     
     public NotamType Type { get; set; }
     
-    public string NotamOffice { get; set; }
+    public required string NotamOffice { get; set; }
     
-    public string QCode { get; set; }
+    public required string QCode { get; set; }
     
-    public string Identifier  { get; set; }
+    public required string Identifier  { get; set; }
     
-    public string RefferenceIdentifier  { get; set; }
+    public required string RefferenceIdentifier  { get; set; }
     
-    public string FIR { get; set; }
+    public required string FIR { get; set; }
     
-    public string Purpose { get; set; }
+    public required string Purpose { get; set; }
     
-    public Coordinates Coordinates { get; set; }
+    public required Coordinates Coordinates { get; set; }
 }

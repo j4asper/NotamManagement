@@ -1,8 +1,8 @@
-﻿namespace NotamManagement.Shared.Models;
+﻿namespace NotamManagement.Core.Models;
 
 public class FlightPlan
 {
-    public int Id { get; set; }
+    public required int Id { get; set; }
     
-    public List<Airport> Airports { get; set; }
+    public required List<Airport> Airports { get; set; }
 }

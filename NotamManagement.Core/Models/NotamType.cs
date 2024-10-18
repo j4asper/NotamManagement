@@ -1,4 +1,4 @@
-﻿namespace NotamManagement.Shared.Models;
+﻿namespace NotamManagement.Core.Models;
 
 public enum NotamType
 {
