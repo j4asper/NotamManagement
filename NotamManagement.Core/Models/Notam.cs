@@ -18,11 +18,13 @@ public class Notam
     
     public required string Identifier  { get; set; }
     
-    public required string RefferenceIdentifier  { get; set; }
+    public string? RefferenceIdentifier  { get; set; }
     
     public required string FIR { get; set; }
     
     public required string Purpose { get; set; }
+
+    public string? NotamText { get; set; }
     
     public required Coordinates Coordinates { get; set; }
 }
