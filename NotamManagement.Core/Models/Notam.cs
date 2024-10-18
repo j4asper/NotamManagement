@@ -18,12 +18,8 @@ public class Notam
     
     public required string Identifier  { get; set; }
     
-<<<<<<< HEAD
-    public required string ReferenceIdentifier { get; set; }
-=======
-    public string? RefferenceIdentifier  { get; set; }
->>>>>>> 24e5755456ea3098fa9b1288d28f2cd01de5000f
-    
+    public string? ReferenceIdentifier { get; set; }
+
     public required string FIR { get; set; }
     
     public required string Purpose { get; set; }

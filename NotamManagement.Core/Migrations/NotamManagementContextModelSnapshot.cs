@@ -144,12 +144,7 @@ namespace NotamManagement.Core.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-<<<<<<< HEAD
                     b.Property<string>("ReferenceIdentifier")
-                        .IsRequired()
-=======
-                    b.Property<string>("RefferenceIdentifier")
->>>>>>> 24e5755456ea3098fa9b1288d28f2cd01de5000f
                         .HasColumnType("text");
 
                     b.Property<int>("Type")
