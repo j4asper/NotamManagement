@@ -13,4 +13,6 @@ public class Coordinates
     public int UpperFlightLevel { get; set; }
     
     public int LowerFlightLevel { get; set; }
+
+    public int Radius { get; set; }
 }

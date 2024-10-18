@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NotamManagement.Core.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NotamManagement.Core.Migrations
 {
     [DbContext(typeof(NotamManagementContext))]
-    partial class NotamManagementContextModelSnapshot : ModelSnapshot
+    [Migration("20241018090802_fix_refferenceIdentifier")]
+    partial class fix_refferenceIdentifier
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,7 +121,7 @@ namespace NotamManagement.Core.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("EffectiveValidTo")
+                    b.Property<DateTime>("EffectiveValidTo")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FIR")
@@ -144,12 +147,7 @@ namespace NotamManagement.Core.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-<<<<<<< HEAD
-                    b.Property<string>("ReferenceIdentifier")
-                        .IsRequired()
-=======
                     b.Property<string>("RefferenceIdentifier")
->>>>>>> 24e5755456ea3098fa9b1288d28f2cd01de5000f
                         .HasColumnType("text");
 
                     b.Property<int>("Type")
@@ -158,7 +156,7 @@ namespace NotamManagement.Core.Migrations
                     b.Property<DateTime>("ValidFrom")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("ValidTo")
+                    b.Property<DateTime>("ValidTo")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
