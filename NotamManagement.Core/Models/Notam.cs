@@ -2,7 +2,7 @@
 
 public class Notam
 {
-    public required int Id { get; set; }
+    public int Id { get; set; }
     
     public DateTime ValidFrom { get; set; }
     

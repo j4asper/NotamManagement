@@ -6,7 +6,7 @@ public class NotamAction
     
     public int CustomerId { get; set; }
     
-    public required Notam Notam { get; set; }
+    public required int NotamId { get; set; }
     
     public Importance Importance { get; set; }
     

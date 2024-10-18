@@ -14,5 +14,4 @@ public class User
     
     public int OrganizationId { get; set; }
     
-    public required Organization Organization { get; set; }
 }

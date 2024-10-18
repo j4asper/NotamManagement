@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NotamManagement.Core.Data;
+using NotamManagement.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,43 +9,47 @@ using System.Threading.Tasks;
 
 namespace NotamManagement.Core.Repository
 {
-    public class NotamRepository<T> : IRepository<T> where T : class
+    public class NotamRepository : IRepository<Notam>
     {
-        private readonly DbContext _context;
-        private readonly DbSet<T> _dbSet;
+        private readonly NotamManagementContext _context;
+        private readonly DbSet<Notam> _dbSet;
+        //private readonly DbSet<Coordinates> _coordinatesSet;
 
-        public NotamRepository(DbContext context)
+        public NotamRepository(NotamManagementContext context)
         {
             _context = context;
-            _dbSet = _context.Set<T>();
+            _dbSet = _context.Set<Notam>();
+            //  _coordinatesSet = _context.Set<Coordinates>();
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<Notam?> GetByIdAsync(int id)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.Include(n => n.Coordinates).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<Notam>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync();
+
+            return await _dbSet.Include(n => n.Coordinates).ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<Notam>> FindAsync(Expression<Func<Notam, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(Notam entity)
         {
             await _dbSet.AddAsync(entity);
+            _context.SaveChanges();
         }
 
-        public async Task AddRangeAsync(IEnumerable<T> entities)
+        public async Task AddRangeAsync(IEnumerable<Notam> entities)
         {
             await _dbSet.AddRangeAsync(entities);
         }
 
-        public async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(Notam entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
             await Task.CompletedTask;
@@ -55,42 +61,44 @@ namespace NotamManagement.Core.Repository
             if (entity != null)
             {
                 _dbSet.Remove(entity);
+                _context.SaveChanges();
             }
+
         }
 
-        public async Task RemoveAsync(T entity)
+        public async Task RemoveAsync(Notam entity)
         {
             _dbSet.Remove(entity);
             await Task.CompletedTask;
         }
 
-        public async Task RemoveRangeAsync(IEnumerable<T> entities)
+        public async Task RemoveRangeAsync(IEnumerable<Notam> entities)
         {
             _dbSet.RemoveRange(entities);
             await Task.CompletedTask;
         }
 
-        public T GetById(int id)
+        public Notam GetById(int id)
         {
             return _dbSet.Find(id) ?? throw new InvalidOperationException("Entity not found");
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<Notam> GetAll()
         {
             return _dbSet.ToList();
         }
 
-        public void Add(T entity)
+        public void Add(Notam entity)
         {
             _dbSet.Add(entity);
         }
 
-        public void Update(T entity)
+        public void Update(Notam entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public void Delete(T entity)
+        public void Delete(Notam entity)
         {
             _dbSet.Remove(entity);
         }

@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NotamManagement.Core.Data;
+using NotamManagement.Core.Models;
+using NotamManagement.Core.Repository;
+
 
 namespace NotamManagement.Api;
 
@@ -17,6 +21,7 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<NotamManagementContext>(options =>
         options.UseNpgsql(builder.Configuration.GetRequiredSection("Database:ConnectionString").Value));
+        builder.Services.AddScoped<IRepository<Notam>, NotamRepository>();
 
         var app = builder.Build();
 
