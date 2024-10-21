@@ -24,7 +24,17 @@ public class Notam
     
     public required string Purpose { get; set; }
 
+    public required string Traffic { get; set; }
+
+    public required string Scope { get; set; }
+
     public string? NotamText { get; set; }
-    
+
+    public string? RawNotam => $"{Identifier} NOTAM{Type.ToString().Substring(0, 1)} {ReferenceIdentifier ?? String.Empty} \n" +
+        $"Q) {FIR}/Q{QCode}/{Traffic}/{Purpose}/{Scope}/{Coordinates.LowerFlightLevel.ToString("D3")}/{Coordinates.UpperFlightLevel.ToString("D3")}/{Coordinates.LongLat}/{Coordinates.Radius.ToString("D3")} \n" +
+        $"A) {NotamOffice}\n" +
+        $"B) {ValidFrom.ToString("yyMMddHHmm")} \n{(ValidTo>new DateTime(9995,12,31) ? "C) PERM" : ValidTo.HasValue ? $"C) {ValidTo?.ToString("yyMMddHHmm")}" : "")} \n" +
+        $"E) {NotamText}";
+
     public required Coordinates Coordinates { get; set; }
 }

@@ -22,6 +22,7 @@ public class NotamController : ControllerBase
     public async Task<ActionResult<Notam>> GetNotamByIdAsync(int notamId, CancellationToken cancellationToken = default)
     {
         var notam = await _notamRepository.GetByIdAsync(notamId);
+        Console.WriteLine(notam?.RawNotam);
         return notam == null? NotFound() : notam;
       
     }
