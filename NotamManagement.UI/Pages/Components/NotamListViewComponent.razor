@@ -1,0 +1,10 @@
+<MudSimpleTable Class="gap-2">
+    @foreach (var notam in Notams)
+    {
+        <NotamCardComponent Notam="notam"/>
+    }
+</MudSimpleTable>
+
+@code {
+    [EditorRequired] [Parameter] public List<Notam> Notams { get; set; } = null!;
+}

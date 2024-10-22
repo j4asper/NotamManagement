@@ -1,0 +1,7 @@
+<MudCard Class="mb-2">
+    <MudText>Type: @Notam.Type</MudText>
+</MudCard>
+
+@code {
+    [EditorRequired] [Parameter] public Notam Notam { get; set; } = null!;
+}
