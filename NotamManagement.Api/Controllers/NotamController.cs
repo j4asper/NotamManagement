@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotamManagement.Core.Migrations;
 using NotamManagement.Core.Models;
@@ -16,6 +17,7 @@ public class NotamController : ControllerBase
         _notamRepository = notamRepository;
     }
 
+    [Authorize]
     [HttpGet("Id/{notamId:int}")]
     [ProducesResponseType<Notam>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
