@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NotamManagement.Core.Data;
@@ -21,7 +22,12 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<NotamManagementContext>(options =>
         options.UseNpgsql(builder.Configuration.GetRequiredSection("Database:ConnectionString").Value));
+        builder.Services.AddDbContext<IdentityDbContext>(
+    options => options.UseNpgsql(builder.Configuration.GetRequiredSection("Database:ConnectionString").Value));
         builder.Services.AddScoped<IRepository<Notam>, NotamRepository>();
+        builder.Services.AddAuthorization();
+        builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<IdentityDbContext>();
 
         var app = builder.Build();
 
@@ -31,7 +37,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        app.MapIdentityApi<IdentityUser>();
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
