@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotamManagement.Core.Models;
 
@@ -7,6 +8,7 @@ namespace NotamManagement.Api.Controllers;
 [ApiController]
 public class AirportController : ControllerBase
 {
+    
     [HttpGet("Id/{airportId:int}")]
     [ProducesResponseType<Airport>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
