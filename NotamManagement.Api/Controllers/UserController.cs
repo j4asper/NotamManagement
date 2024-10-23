@@ -19,17 +19,28 @@ public class UserController : ControllerBase
     [HttpGet("Id/{userId:int}")]
     [ProducesResponseType<User>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult<User>> GetUserByIdAsync(int userId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<User>> GetUserByIdAsync(string userId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+       var user = await _userRepository.GetByIdAsync(userId);
+        if(user == null)
+        {
+            return NotFound();
+        }
+        return user;
     }
     
     [HttpDelete("Id/{userId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> DeleteUserByIdAsync(int userId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> DeleteUserByIdAsync(string userId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+       var user = await _userRepository.GetByIdAsync(userId);
+        if(user == null)
+        {
+            return NotFound();
+        }
+        await _userRepository.RemoveAsync(userId);
+        return Ok();
     }
     
     [HttpPatch("Id/{userId}")]
