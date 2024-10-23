@@ -19,6 +19,16 @@ public class Program
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
+        
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", _builder =>
+            {
+                _builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            });
+        });
+
+        
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<NotamManagementContext>(options =>
         options.UseNpgsql(builder.Configuration.GetRequiredSection("Database:ConnectionString").Value));
@@ -47,6 +57,7 @@ public class Program
 
         app.UseAuthorization();
 
+        app.UseCors("AllowAll");
 
         app.MapControllers();
 
