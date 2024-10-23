@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NotamManagement.Core.Models;
+using NotamManagement.Core.Repository;
 
 namespace NotamManagement.Api.Controllers;
 
@@ -7,6 +8,14 @@ namespace NotamManagement.Api.Controllers;
 [ApiController]
 public class NotamActionController : ControllerBase
 {
+    private readonly IRepository<NotamAction> _notamActionRepository;
+
+    public NotamActionController(IRepository<NotamAction> notamActionRepository)
+    {
+        _notamActionRepository = notamActionRepository;
+    }
+
+
     [HttpGet("Id/{notamActionId:int}")]
     [ProducesResponseType<NotamAction>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

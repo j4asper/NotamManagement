@@ -3,7 +3,7 @@ using NotamManagement.Core.Models;
 
 namespace NotamManagement.Core.Data
 {
-    public class NotamManagementContext : DbContext
+    public class NotamManagementContext : IdentityDbContext<User>
     {
         public NotamManagementContext(DbContextOptions<NotamManagementContext> options) : base(options) { }
 
@@ -13,6 +13,5 @@ namespace NotamManagement.Core.Data
         public DbSet<FlightPlan> FlightPlans { get; set; }
         public DbSet<NotamAction> NotamActions { get; set; }
         public DbSet<Organization> Organizations { get; set; }
-        public DbSet<User> Users { get; set; }
     }
 }

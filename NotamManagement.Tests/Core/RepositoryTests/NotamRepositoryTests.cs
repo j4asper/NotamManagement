@@ -79,6 +79,24 @@ public class NotamRepositoryTests
         var result = await repository.FindAsync(x => x.Id == notam.Id);
         Assert.Empty(result);
     }
+    
+    [Fact]
+    public async Task RemoveByObjectAsync_ShouldRemoveNotam()
+    {
+        var repository = new NotamRepository(context);
+        
+        // Arrange
+        var notam = notams[0];
+        await repository.AddAsync(notam);
+
+        // Act
+        await repository.RemoveAsync(notam);
+
+        // Assert
+        var result = await repository.FindAsync(x => x.Id == notam.Id);
+        Assert.Empty(result);
+    }
+
 
     [Fact]
     public async Task UpdateAsync_ShouldUpdateNotam()

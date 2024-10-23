@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NotamManagement.Core.Models;
+using NotamManagement.Core.Repository;
 
 namespace NotamManagement.Api.Controllers;
 
@@ -7,6 +8,15 @@ namespace NotamManagement.Api.Controllers;
 [ApiController]
 public class OrganizationController : ControllerBase
 {
+
+    private readonly IRepository<Organization> _organizationRepository;
+
+    public OrganizationController(IRepository<Organization> organizationRepository)
+    {
+        _organizationRepository = organizationRepository;
+    }
+
+
     [HttpGet("Id/{organizationId:int}")]
     [ProducesResponseType<Organization>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -26,9 +36,12 @@ public class OrganizationController : ControllerBase
     [HttpPut("Id/{organizationId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> UpdateOrganizationByIdAsync(int organizationId, Organization organization, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> UpdateOrganizationByIdAsync(int organizationId, Organization organization, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        organization.Id = organizationId;
+       await _organizationRepository.UpdateAsync(organization);
+        return Ok();
+      
     }
     
     [HttpGet]
@@ -41,8 +54,16 @@ public class OrganizationController : ControllerBase
     
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public Task<ActionResult> CreateOrganizationAsync(Organization organization, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> CreateOrganizationAsync(Organization organization, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        if(organization == null)
+        {
+            return BadRequest();
+        }
+        else
+        {
+            await _organizationRepository.AddAsync(organization);
+            return Ok();
+        }
     }
 }

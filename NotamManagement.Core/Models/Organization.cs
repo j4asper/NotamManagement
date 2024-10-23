@@ -6,9 +6,9 @@ public class Organization
     
     public required string Name { get; set; }
     
-    public required List<User> Users { get; set; }
+    public List<User> Users { get; set; } = new List<User>();
     
-    public required List<FlightPlan> FlightPlans { get; set; }
+    public List<FlightPlan> FlightPlans { get; set; } = new List<FlightPlan>();
     
-    public required List<NotamAction> NotamActions { get; set; }
+    public List<NotamAction> NotamActions { get; set; } = new List<NotamAction>();
 }

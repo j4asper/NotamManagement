@@ -26,10 +26,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Update="appsettings.Development.json">
+      <Content Update="appsettings.Development.json" CopyToOutputDirectory="Always">
         <DependentUpon>appsettings.json</DependentUpon>
       </Content>
-      <Content Update="appsettings.Production.json">
+      <Content Update="appsettings.Production.json" CopyToOutputDirectory="Always">
         <DependentUpon>appsettings.json</DependentUpon>
       </Content>
     </ItemGroup>
