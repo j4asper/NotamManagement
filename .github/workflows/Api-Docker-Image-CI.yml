@@ -1,7 +1,9 @@
 name: Api Docker Image CI
 
 on:
-  push
+  push:
+    branches:
+      - 'main'
 
 jobs:
   build:

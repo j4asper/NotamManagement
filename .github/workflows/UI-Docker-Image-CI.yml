@@ -1,7 +1,9 @@
 name: UI Docker Image CI
 
 on:
-  push
+  push:
+    branches:
+      - 'main'
 
 jobs:
   build:
