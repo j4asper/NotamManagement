@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotamManagement.Core.Models;
+using NotamManagement.Core.Repository;
 
 namespace NotamManagement.Api.Controllers;
 
@@ -8,43 +9,60 @@ namespace NotamManagement.Api.Controllers;
 [ApiController]
 public class AirportController : ControllerBase
 {
+
+    private readonly IRepository<Airport> _airportRepository;
+
+    public AirportController(IRepository<Airport> airportRepository)
+    {
+        _airportRepository = airportRepository;
+    }
     
     [HttpGet("Id/{airportId:int}")]
     [ProducesResponseType<Airport>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult<Airport>> GetAirportByIdAsync(int airportId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<Airport>> GetAirportByIdAsync(int airportId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var airport = await _airportRepository.GetByIdAsync(airportId);
+        return Ok(airport);
     }
     
     [HttpDelete("Id/{airportId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> DeleteAirportByIdAsync(int airportId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> DeleteAirportByIdAsync(int airportId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _airportRepository.RemoveAsync(airportId);
+        return NoContent();
     }
     
     [HttpPut("Id/{airportId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> UpdateAirportByIdAsync(int airportId, Airport airport, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> UpdateAirportByIdAsync(int airportId, Airport airport, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var airPort = await _airportRepository.GetByIdAsync(airportId);
+        if(airPort == null)
+        {
+            return NotFound();
+        }
+        await _airportRepository.UpdateAsync(airport);
+        return Ok(airPort);
     }
     
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult<IReadOnlyList<Airport>>> GetAllAirportsAsync(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IReadOnlyList<Airport>>> GetAllAirportsAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var airports = await _airportRepository.GetAllAsync();
+        return Ok(airports);
     }
     
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public Task<ActionResult> CreateAirportAsync(Airport airport, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> CreateAirportAsync(Airport airport, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _airportRepository.AddAsync(airport);
+        return Ok(airport);
     }
 }

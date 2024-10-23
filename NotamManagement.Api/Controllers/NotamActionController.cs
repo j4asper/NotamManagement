@@ -19,39 +19,59 @@ public class NotamActionController : ControllerBase
     [HttpGet("Id/{notamActionId:int}")]
     [ProducesResponseType<NotamAction>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult<NotamAction>> GetNotamActionByIdAsync(int notamActionId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<NotamAction>> GetNotamActionByIdAsync(int notamActionId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var action = await _notamActionRepository.GetByIdAsync(notamActionId);
+        if(action == null)
+        {
+            return NotFound();
+        }
+        return Ok(action);
+        
+
     }
     
     [HttpDelete("Id/{notamActionId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> DeleteNotamActionByIdAsync(int notamActionId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> DeleteNotamActionByIdAsync(int notamActionId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _notamActionRepository.RemoveAsync(notamActionId);
+        return Ok();
     }
     
     [HttpPut("Id/{notamActionId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> UpdateNotamActionByIdAsync(int notamActionId, NotamAction notamAction, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> UpdateNotamActionByIdAsync(int notamActionId, NotamAction notamAction, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var nAction = await _notamActionRepository.GetByIdAsync(notamActionId);
+        if(nAction == null)
+        {
+            return NotFound();
+        }
+        await _notamActionRepository.UpdateAsync(notamAction);
+        return Ok(nAction);
     }
     
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult<IReadOnlyList<NotamAction>>> GetAllNotamActionsAsync(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IReadOnlyList<NotamAction>>> GetAllNotamActionsAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+       var notams = await _notamActionRepository.GetAllAsync();
+        return Ok(notams);
     }
     
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public Task<ActionResult> CreateNotamActionAsync(NotamAction notamAction, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> CreateNotamActionAsync(NotamAction notamAction, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+         if(notamAction == null)
+        {
+            return BadRequest();
+        }
+        await _notamActionRepository.AddAsync(notamAction);
+        return Ok(notamAction);
     }
 }
