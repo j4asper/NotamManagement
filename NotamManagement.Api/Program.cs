@@ -24,7 +24,7 @@ public class Program
         options.UseNpgsql(builder.Configuration.GetRequiredSection("Database:ConnectionString").Value));
         builder.Services.AddScoped<IRepository<Notam>, NotamRepository>();
         builder.Services.AddScoped<IRepository<Airport>, AirportRepository>();
-       // builder.Services.AddScoped<IRepository<Coordinates>, CoordinatesRepository>();
+        // builder.Services.AddScoped<IRepository<Coordinates>, CoordinatesRepository>();
         builder.Services.AddScoped<IRepository<FlightPlan>, FlightPlanRepository>();
         builder.Services.AddScoped<IRepository<NotamAction>, NotamActionRepository>();
         builder.Services.AddScoped<IRepository<Organization>, OrganizationRepository>();
