@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\NotamManagement.Api\NotamManagement.Api.csproj" />
+
       <ProjectReference Include="..\NotamManagement.Core\NotamManagement.Core.csproj" />
     </ItemGroup>
 
