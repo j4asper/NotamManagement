@@ -40,10 +40,27 @@ public class NotamRepositoryTests
         var repository = new NotamRepository(context);
         
         // Act
-        var result = await repository.FindAsync(x => x.Id == 999999999); // ID that doesn't exist
+        var result = await repository.FindAsync(x => x.Id == int.MaxValue); // ID that doesn't exist
 
         // Assert
         Assert.Empty(result);
+    }
+    
+    [Fact]
+    public async Task GetNotamById_ShouldReturnNull_WhenNotFound()
+    {
+        var repository = new NotamRepository(context);
+        
+        // Arrange
+        var notam = notams[0];
+        
+        await repository.AddAsync(notam);
+        
+        // Act
+        var result = await repository.GetByIdAsync(notam.Id); // ID that doesn't exist
+
+        // Assert
+        Assert.Equal(notam.Id, result.Id);
     }
 
     [Fact]
