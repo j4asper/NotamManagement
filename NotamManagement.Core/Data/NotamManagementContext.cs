@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NotamManagement.Core.Models;
 
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
-
 namespace NotamManagement.Core.Data
 {
     public class NotamManagementContext : IdentityDbContext<User>
