@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NotamManagement.Core.Migrations;
+
 using NotamManagement.Core.Models;
 using NotamManagement.Core.Repository;
 
@@ -28,8 +28,6 @@ public class NotamController : ControllerBase
         return notam == null? NotFound() : notam;
       
     }
-
-
     
     [HttpDelete("Id/{notamId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]

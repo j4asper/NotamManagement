@@ -4,8 +4,6 @@ public class NotamAction
 {
     public int Id { get; set; }
     
-    public int CustomerId { get; set; }
-    
     public required int NotamId { get; set; }
     
     public Importance Importance { get; set; }

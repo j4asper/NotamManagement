@@ -1,17 +1,14 @@
-﻿namespace NotamManagement.Core.Models;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User
+namespace NotamManagement.Core.Models;
+
+public class User : IdentityUser
 {
-    public required int Id { get; set; }
     
-    public required string FullName { get; set; }
+    public string? FullName { get; set; }
     
     public DateTime DateOfBirth { get; set; }
     
-    public required string Username { get; set; }
-    
-    public required string Password { get; set; }
-    
-    public int OrganizationId { get; set; }
+    //public int OrganizationId { get; set; }
     
 }

@@ -41,18 +41,19 @@ namespace NotamManagement.Core.Repository
         public async Task AddAsync(Notam entity)
         {
             await _dbSet.AddAsync(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task AddRangeAsync(IEnumerable<Notam> entities)
         {
             await _dbSet.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Notam entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
         public async Task RemoveAsync(int id)
@@ -61,46 +62,23 @@ namespace NotamManagement.Core.Repository
             if (entity != null)
             {
                 _dbSet.Remove(entity);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
         }
 
         public async Task RemoveAsync(Notam entity)
         {
+            
             _dbSet.Remove(entity);
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
         public async Task RemoveRangeAsync(IEnumerable<Notam> entities)
         {
             _dbSet.RemoveRange(entities);
-            await Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
-        public Notam GetById(int id)
-        {
-            return _dbSet.Find(id) ?? throw new InvalidOperationException("Entity not found");
-        }
-
-        public IEnumerable<Notam> GetAll()
-        {
-            return _dbSet.ToList();
-        }
-
-        public void Add(Notam entity)
-        {
-            _dbSet.Add(entity);
-        }
-
-        public void Update(Notam entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-        }
-
-        public void Delete(Notam entity)
-        {
-            _dbSet.Remove(entity);
-        }
     }
 }

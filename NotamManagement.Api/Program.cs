@@ -22,12 +22,17 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<NotamManagementContext>(options =>
         options.UseNpgsql(builder.Configuration.GetRequiredSection("Database:ConnectionString").Value));
-        builder.Services.AddDbContext<IdentityDbContext>(
-    options => options.UseNpgsql(builder.Configuration.GetRequiredSection("Database:ConnectionString").Value));
         builder.Services.AddScoped<IRepository<Notam>, NotamRepository>();
+        builder.Services.AddScoped<IRepository<Airport>, AirportRepository>();
+       // builder.Services.AddScoped<IRepository<Coordinates>, CoordinatesRepository>();
+        builder.Services.AddScoped<IRepository<FlightPlan>, FlightPlanRepository>();
+        builder.Services.AddScoped<IRepository<NotamAction>, NotamActionRepository>();
+        builder.Services.AddScoped<IRepository<Organization>, OrganizationRepository>();
+        builder.Services.AddScoped<IRepository<User>, UserRepository>();
+
         builder.Services.AddAuthorization();
-        builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-    .AddEntityFrameworkStores<IdentityDbContext>();
+        builder.Services.AddIdentityApiEndpoints<User>()
+    .AddEntityFrameworkStores<NotamManagementContext>();
 
         var app = builder.Build();
 
@@ -37,7 +42,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        app.MapIdentityApi<IdentityUser>();
+        app.MapIdentityApi<User>();
         app.UseHttpsRedirection();
 
         app.UseAuthorization();

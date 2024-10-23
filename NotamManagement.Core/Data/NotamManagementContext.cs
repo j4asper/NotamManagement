@@ -6,18 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using NotamManagement.Core.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace NotamManagement.Core.Data
 {
-    public class NotamManagementContext : DbContext
+    public class NotamManagementContext : IdentityDbContext<User>
     {
 
-        private readonly IConfiguration _configuration;
-
-        public NotamManagementContext(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        public NotamManagementContext(DbContextOptions<NotamManagementContext> options) : base(options) { }
 
         public DbSet<Notam> Notams { get; set; }
         public DbSet<Airport> Airports { get; set; }
@@ -25,20 +21,6 @@ namespace NotamManagement.Core.Data
         public DbSet<FlightPlan> FlightPlans { get; set; }
         public DbSet<NotamAction> NotamActions { get; set; }
         public DbSet<Organization> Organizations { get; set; }
-        public DbSet<User> Users { get; set; }
-
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var connectionString = _configuration.GetRequiredSection("Database:ConnectionString").Value;
-
-                optionsBuilder.UseNpgsql(connectionString);
-            }
-
-           // optionsBuilder.UseNpgsql($"Host=Hjem.jazper.dk;Database=notam_management;Username=master;Password=9ycLQnsHBy34gtI");
-        }
 
 
 

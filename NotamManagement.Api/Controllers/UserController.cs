@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NotamManagement.Core.Models;
+using NotamManagement.Core.Repository;
 
 namespace NotamManagement.Api.Controllers;
 
@@ -7,6 +8,14 @@ namespace NotamManagement.Api.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
+    private readonly IRepository<User> _userRepository;
+
+    public UserController(IRepository<User> userRepository)
+    {
+        _userRepository = userRepository;
+    }
+
+
     [HttpGet("Id/{userId:int}")]
     [ProducesResponseType<User>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -34,9 +43,10 @@ public class UserController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult<IReadOnlyList<User>>> GetAllUsersAsync(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IReadOnlyList<User>>> GetAllUsersAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var users = await _userRepository.GetAllAsync();
+        return users == null ? [] : users.ToList();
     }
     
     [HttpPost]
