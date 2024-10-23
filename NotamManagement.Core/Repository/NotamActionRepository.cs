@@ -1,4 +1,6 @@
-﻿using NotamManagement.Core.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using NotamManagement.Core.Data;
+using NotamManagement.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,49 +12,68 @@ namespace NotamManagement.Core.Repository
 {
     public class NotamActionRepository : IRepository<NotamAction>
     {
-        public Task AddAsync(NotamAction entity)
+        private readonly NotamManagementContext _context;
+        private readonly DbSet<NotamAction> _dbSet;
+
+        public NotamActionRepository(NotamManagementContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _dbSet = _context.Set<NotamAction>();
         }
 
-        public Task AddRangeAsync(IEnumerable<NotamAction> entities)
+        public async Task AddAsync(NotamAction entity)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<NotamAction>> FindAsync(Expression<Func<NotamAction, bool>> predicate)
+        public async Task AddRangeAsync(IEnumerable<NotamAction> entities)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<NotamAction>> GetAllAsync()
+        public async Task<IEnumerable<NotamAction>> FindAsync(Expression<Func<NotamAction, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public Task<NotamAction?> GetByIdAsync(int id)
+        public async Task<IEnumerable<NotamAction>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbSet.ToListAsync();
         }
 
-        public Task RemoveAsync(int id)
+        public async Task<NotamAction?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
-        public Task RemoveAsync(NotamAction entity)
+        public async Task RemoveAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task RemoveRangeAsync(IEnumerable<NotamAction> entities)
+        public async Task RemoveAsync(NotamAction entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(NotamAction entity)
+        public async Task RemoveRangeAsync(IEnumerable<NotamAction> entities)
         {
-            throw new NotImplementedException();
+            _dbSet.RemoveRange(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(NotamAction entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

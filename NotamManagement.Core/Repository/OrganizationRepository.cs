@@ -28,39 +28,47 @@ namespace NotamManagement.Core.Repository
             _context.SaveChanges();
         }
 
-        public Task AddRangeAsync(IEnumerable<Organization> entities)
+        public async Task AddRangeAsync(IEnumerable<Organization> entities)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Organization>> FindAsync(Expression<Func<Organization, bool>> predicate)
+        public async Task<IEnumerable<Organization>> FindAsync(Expression<Func<Organization, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public Task<IEnumerable<Organization>> GetAllAsync()
+        public async Task<IEnumerable<Organization>> GetAllAsync()
         {
-            throw new NotImplementedException();
+          return await _dbSet.ToListAsync();
         }
 
-        public Task<Organization?> GetByIdAsync(int id)
+        public async Task<Organization?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
-        public Task RemoveAsync(int id)
+        public async Task RemoveAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task RemoveAsync(Organization entity)
+        public async Task RemoveAsync(Organization entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task RemoveRangeAsync(IEnumerable<Organization> entities)
+        public async Task RemoveRangeAsync(IEnumerable<Organization> entities)
         {
-            throw new NotImplementedException();
+            _dbSet.RemoveRange(entities);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Organization entity)

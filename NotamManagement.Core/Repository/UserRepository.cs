@@ -31,9 +31,9 @@ namespace NotamManagement.Core.Repository
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> FindAsync(Expression<Func<User, bool>> predicate)
+        public async Task<IEnumerable<User>> FindAsync(Expression<Func<User, bool>> predicate)
         {
-            throw new NotImplementedException();
+           return await _dbSet.Where(predicate).ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
@@ -41,29 +41,37 @@ namespace NotamManagement.Core.Repository
            return await _dbSet.ToListAsync();
         }
 
-        public Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
-        public Task RemoveAsync(int id)
+        public async Task RemoveAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task RemoveAsync(User entity)
+        public async Task RemoveAsync(User entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task RemoveRangeAsync(IEnumerable<User> entities)
+        public async Task RemoveRangeAsync(IEnumerable<User> entities)
         {
-            throw new NotImplementedException();
+            _dbSet.RemoveRange(entities);
+            await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(User entity)
+        public async Task UpdateAsync(User entity)
         {
-            throw new NotImplementedException();
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

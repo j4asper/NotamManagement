@@ -21,49 +21,60 @@ namespace NotamManagement.Core.Repository
             _dbSet = _context.Set<FlightPlan>();
         }
 
-        public Task AddAsync(FlightPlan entity)
+        public async Task AddAsync(FlightPlan entity)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task AddRangeAsync(IEnumerable<FlightPlan> entities)
+        public async Task AddRangeAsync(IEnumerable<FlightPlan> entities)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<FlightPlan>> FindAsync(Expression<Func<FlightPlan, bool>> predicate)
+        public async Task<IEnumerable<FlightPlan>> FindAsync(Expression<Func<FlightPlan, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(predicate).ToListAsync();
+
         }
 
-        public Task<IEnumerable<FlightPlan>> GetAllAsync()
+        public async Task<IEnumerable<FlightPlan>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbSet.ToListAsync();
         }
 
-        public Task<FlightPlan?> GetByIdAsync(int id)
+        public async Task<FlightPlan?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
-        public Task RemoveAsync(int id)
+        public async Task RemoveAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task RemoveAsync(FlightPlan entity)
+        public async Task RemoveAsync(FlightPlan entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task RemoveRangeAsync(IEnumerable<FlightPlan> entities)
+        public async Task RemoveRangeAsync(IEnumerable<FlightPlan> entities)
         {
-            throw new NotImplementedException();
+            _dbSet.RemoveRange(entities);
+            await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(FlightPlan entity)
+        public async Task UpdateAsync(FlightPlan entity)
         {
-            throw new NotImplementedException();
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

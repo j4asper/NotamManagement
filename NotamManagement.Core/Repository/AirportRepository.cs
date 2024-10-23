@@ -59,22 +59,23 @@ namespace NotamManagement.Core.Repository
 
         }
 
-        public Task RemoveAsync(Airport entity)
+        public async Task RemoveAsync(Airport entity)
         {
             _dbSet.Remove(entity);
-           _context.SaveChanges();
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
-    
 
-        public Task RemoveRangeAsync(IEnumerable<Airport> entities)
+
+        public async Task RemoveRangeAsync(IEnumerable<Airport> entities)
         {
-            throw new NotImplementedException();
+            _dbSet.RemoveRange(entities);
+            await _context.SaveChangesAsync();
         }
 
         public Task UpdateAsync(Airport entity)
         {
-            throw new NotImplementedException();
+            _context.Entry(entity).State = EntityState.Modified;
+            return _context.SaveChangesAsync();
         }
     }
 
