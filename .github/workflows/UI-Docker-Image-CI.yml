@@ -1,0 +1,15 @@
+name: UI Docker Image CI
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: |
+          echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.jazper.dk --username ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+          docker build -f ./UI.Dockerfile -t registry.jazper.dk/notam-management-ui:latest .
+          docker push registry.jazper.dk/notam-management-ui:latest
