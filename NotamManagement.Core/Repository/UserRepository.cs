@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NotamManagement.Core.Repository
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IUserRepository<User>
     {
         private readonly NotamManagementContext _context;
         private readonly DbSet<User> _dbSet;
@@ -33,20 +33,20 @@ namespace NotamManagement.Core.Repository
 
         public async Task<IEnumerable<User>> FindAsync(Expression<Func<User, bool>> predicate)
         {
-           return await _dbSet.Where(predicate).ToListAsync();
+            return await _dbSet.Where(predicate).ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-           return await _dbSet.ToListAsync();
+            return await _dbSet.ToListAsync();
         }
 
-        public async Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(string id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task RemoveAsync(int id)
+        public async Task RemoveAsync(string id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
@@ -70,7 +70,7 @@ namespace NotamManagement.Core.Repository
 
         public async Task UpdateAsync(User entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
+            _dbSet.Update(entity);
             await _context.SaveChangesAsync();
         }
     }

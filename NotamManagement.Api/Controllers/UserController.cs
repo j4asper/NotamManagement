@@ -8,9 +8,9 @@ namespace NotamManagement.Api.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly IRepository<User> _userRepository;
+    private readonly IUserRepository<User> _userRepository;
 
-    public UserController(IRepository<User> userRepository)
+    public UserController(IUserRepository<User> userRepository)
     {
         _userRepository = userRepository;
     }
@@ -32,12 +32,50 @@ public class UserController : ControllerBase
         throw new NotImplementedException();
     }
     
-    [HttpPut("Id/{userId:int}")]
+    [HttpPatch("Id/{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> UpdateUserByIdAsync(int userId, User user, CancellationToken cancellationToken = default)
+    public async Task<ActionResult> UpdateUserByIdAsync(string userId, [FromBody] User user, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var currUser = await _userRepository.GetByIdAsync(userId);
+        if(currUser == null)
+        {
+            return NotFound();
+        }
+
+        if (!string.IsNullOrEmpty(user.FullName))
+        {
+            currUser.FullName = user.FullName;
+        }
+        if(!string.IsNullOrEmpty(user.Email))
+        {
+            currUser.Email = user.Email;
+            currUser.NormalizedEmail = user.Email.ToUpper();
+        }
+        if(!string.IsNullOrEmpty(user.PhoneNumber))
+        {
+            currUser.PhoneNumber = user.PhoneNumber;
+        }
+        if(!string.IsNullOrEmpty(user.UserName))
+        {
+            currUser.UserName = user.UserName;
+            currUser.NormalizedUserName = user.UserName.ToUpper();
+        }
+        if(!string.IsNullOrEmpty(user.DateOfBirth.ToString()))
+        {
+            currUser.DateOfBirth = user.DateOfBirth;
+        }
+        if (!string.IsNullOrEmpty(user.OrganizationId.ToString()))
+        {
+            currUser.OrganizationId = user.OrganizationId;
+        }
+        
+      
+
+        await _userRepository.UpdateAsync(currUser);
+        return Ok();
+        
+
     }
     
     [HttpGet]

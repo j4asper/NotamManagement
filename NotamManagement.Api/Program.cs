@@ -28,7 +28,7 @@ public class Program
         builder.Services.AddScoped<IRepository<FlightPlan>, FlightPlanRepository>();
         builder.Services.AddScoped<IRepository<NotamAction>, NotamActionRepository>();
         builder.Services.AddScoped<IRepository<Organization>, OrganizationRepository>();
-        builder.Services.AddScoped<IRepository<User>, UserRepository>();
+        builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
 
         builder.Services.AddAuthorization();
         builder.Services.AddIdentityApiEndpoints<User>()

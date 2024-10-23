@@ -9,6 +9,6 @@ public class User : IdentityUser
     
     public DateTime DateOfBirth { get; set; }
     
-    //public int OrganizationId { get; set; }
+    public int? OrganizationId { get; set; }
     
 }
