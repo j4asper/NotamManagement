@@ -24,7 +24,6 @@ public class NotamController : ControllerBase
     public async Task<ActionResult<Notam>> GetNotamByIdAsync(int notamId, CancellationToken cancellationToken = default)
     {
         var notam = await _notamRepository.GetByIdAsync(notamId);
-        Console.WriteLine(notam?.RawNotam);
         return notam == null? NotFound() : notam;
       
     }
@@ -36,14 +35,6 @@ public class NotamController : ControllerBase
     {
          await _notamRepository.RemoveAsync(notamId);
         return Ok();
-    }
-    
-    [HttpPut("Id/{notamId:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<ActionResult> UpdateNotamByIdAsync(int notamId, Notam notam, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
     }
     
     [HttpGet]
