@@ -43,7 +43,8 @@ public class NotamController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<Notam>>> GetAllNotamsAsync(CancellationToken cancellationToken = default)
     {
         var notams = await _notamRepository.GetAllAsync();
-        return notams == null ? [] : notams.ToList();
+        
+        return notams == null ? [] : notams.Take(10).ToList();
     }
     
     [HttpPost]
