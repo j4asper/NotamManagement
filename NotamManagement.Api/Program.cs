@@ -53,7 +53,6 @@ public class Program
             app.UseSwaggerUI();
         }
         app.MapIdentityApi<User>();
-        app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
