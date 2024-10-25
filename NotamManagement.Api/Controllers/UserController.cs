@@ -42,7 +42,20 @@ public class UserController : ControllerBase
         await _userRepository.RemoveAsync(userId);
         return Ok();
     }
-    
+
+    [HttpGet("isAuth")]
+    public IActionResult IsAuthenticated()
+    {
+        // Check if the user is authenticated
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return Ok(true);  // Return true if the user is authenticated
+        }
+
+        return Ok(false); // Return false if not authenticated
+    }
+
+
     [HttpPatch("Id/{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
