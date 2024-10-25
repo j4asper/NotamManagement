@@ -21,6 +21,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
 EXPOSE 8080
 
+RUN apt update && apt install curl -y
+
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 WORKDIR /app
@@ -28,3 +30,5 @@ WORKDIR /app
 COPY --from=publish /publish ./
 
 ENTRYPOINT ["dotnet", "NotamManagement.Api.dll"]
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost:8080/isAlive || exit

@@ -53,14 +53,15 @@ public class Program
             app.UseSwaggerUI();
         }
         app.MapIdentityApi<User>();
-        app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
         app.UseCors("AllowAll");
 
         app.MapControllers();
-
+        
+        app.MapGet("/isAlive", () => "I am alive!");
+        
         app.Run();
     }
 }
