@@ -1,3 +1,6 @@
+![UI Uptime Badge](https://kuma.uptime-vps.jazper.dk/api/badge/7/uptime/48?labelPrefix=UI+&style=for-the-badge)
+![API Uptime Badge](https://kuma.uptime-vps.jazper.dk/api/badge/8/uptime/48?labelPrefix=API+&style=for-the-badge)
+
 # NotamManagement
 Notam Management Project i ncollaboration with [AIRSUPPORT A/S](https://ppsflightplanning.com/).
 
