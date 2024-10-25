@@ -1,0 +1,45 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1"/>
+            Create notam action
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudSelect T="Importance"></MudSelect>
+        <MudTextField T="string" Label="Server ID" ReadOnly="true"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="Save">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    
+    [EditorRequired] [Parameter] public Notam Notam { get; set; } = null!;
+
+    private NotamAction? NotamAction { get; set; } = null;
+
+    protected override void OnInitialized()
+    {
+        NotamAction = new NotamAction
+        {
+            NotamId = Notam.Id,
+            OrganizationId = 1,
+            Note = string.Empty
+        };
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void Save()
+    {
+        // Save new notam action with NotamActionService
+        Snackbar.Add("Notam Action Created!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(Notam));
+    }
+}

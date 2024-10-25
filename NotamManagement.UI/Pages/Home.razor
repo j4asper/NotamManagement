@@ -5,7 +5,7 @@
 <MudStack Row="true">
     <NotamListViewComponent Notams="Notams"/>
     
-    <NotamListViewComponent Notams="Notams"/>
+    <NotamActionListViewComponent NotamActions="NotamActions"/>
 </MudStack>
 
 
@@ -14,11 +14,39 @@
     [Inject] public INotamService NotamService { get; set; } = null!;
     
     private List<Notam> Notams = [];
+    private List<NotamAction> NotamActions = [];
 
     protected override async Task OnInitializedAsync()
     {
         var notams = await NotamService.GetAllNotamsAsync();
 
         Notams = notams.ToList();
+        
+        NotamActions.Add(new NotamAction
+        {
+            Id = 1,
+            OrganizationId = 1,
+            Importance = Importance.Important,
+            NotamId = 1,
+            Note = "Look at this"
+        });
+        
+        NotamActions.Add(new NotamAction
+        {
+            Id = 2,
+            OrganizationId = 2,
+            Importance = Importance.Default,
+            NotamId = 2,
+            Note = "Look at this"
+        });
+        
+        NotamActions.Add(new NotamAction
+        {
+            Id = 3,
+            OrganizationId = 1,
+            Importance = Importance.Ignore,
+            NotamId = 3,
+            Note = "Look at this",
+        });
     }
 }

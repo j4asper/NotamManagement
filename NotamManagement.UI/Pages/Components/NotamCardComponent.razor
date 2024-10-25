@@ -1,7 +1,24 @@
-<MudCard Class="mb-2">
-    <MudText>Type: @Notam.Type</MudText>
+@using NotamManagement.UI.Pages.Dialogs
+<MudCard Class="mb-2 ma-4" Style="width: 500px; height: 250px;">
+    <MudText>@Notam.Identifier</MudText>
+    <MudButton OnClick="OpenNotamActionCreateDialog">Do something</MudButton>
 </MudCard>
 
 @code {
+    [Inject] public IDialogService DialogService { get; set; } = null!;
+    
     [EditorRequired] [Parameter] public Notam Notam { get; set; } = null!;
+    
+    private async Task OpenNotamActionCreateDialog()
+    {
+        var parameters = new DialogParameters<NotamActionCreateDialog> { { x => x.Notam, Notam } };
+
+        var dialog = await DialogService.ShowAsync<NotamActionCreateDialog>("Do something to this notam", parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            // reload the main page or remove this notam from the unhandled list
+        }
+    }
 }
