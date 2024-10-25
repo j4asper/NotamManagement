@@ -25,3 +25,5 @@ WORKDIR /usr/share/nginx/html
 # Then we give nginx our custom config file.
 COPY --from=publish /publish/wwwroot /usr/local/webapp/nginx/html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl -f http://localhost/ || exit
