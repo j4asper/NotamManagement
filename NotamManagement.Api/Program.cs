@@ -59,7 +59,9 @@ public class Program
         app.UseCors("AllowAll");
 
         app.MapControllers();
-
+        
+        app.MapGet("/isAlive", () => "I am alive!");
+        
         app.Run();
     }
 }
