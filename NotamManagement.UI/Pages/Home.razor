@@ -1,12 +1,27 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+@using NotamManagement.Core.Services
+
+@inject ApiAuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
 
 <PageTitle>Home</PageTitle>
 
-<MudStack Row="true">
-    <NotamListViewComponent Notams="Notams"/>
-    
-    <NotamActionListViewComponent NotamActions="NotamActions"/>
-</MudStack>
+<AuthorizeView>
+    <Authorized>
+        <MudStack Row="true">
+            <NotamListViewComponent Notams="Notams" />
+
+            <NotamActionListViewComponent NotamActions="NotamActions" />
+        </MudStack>
+    </Authorized>
+    <NotAuthorized>
+        <h1>You are not authorized to view this page</h1>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+
 
 
 @code

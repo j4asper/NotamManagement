@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NotamManagement.Core.Data;
 using NotamManagement.Core.Models;
 using NotamManagement.Core.Repository;
+using System.Text;
 
 
 namespace NotamManagement.Api;
@@ -24,7 +27,7 @@ public class Program
         {
             options.AddPolicy("AllowAll", _builder =>
             {
-                _builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                _builder.WithOrigins("https://notam-management.jazper.dk").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
             });
         });
 
@@ -52,11 +55,13 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        app.MapIdentityApi<User>();
-
-        app.UseAuthorization();
-
         app.UseCors("AllowAll");
+        app.MapIdentityApi<User>();
+        app.UseAuthentication();
+        app.UseAuthorization();
+       
+
+        
 
         app.MapControllers();
         
