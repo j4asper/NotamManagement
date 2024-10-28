@@ -2,7 +2,7 @@
 
 public class Airport
 {
-    public required int Id { get; set; }
+    public int Id { get; set; }
     
     public required string ICAO { get; set; }
     

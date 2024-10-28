@@ -1,0 +1,59 @@
+﻿@page "/Flightlist"
+
+<MudDataGrid MultiSelection="true" Items="@FlightPlans" Filterable="true" Groupable="true" GroupExpanded="false">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Flights</MudText>
+        <MudSpacer/>
+    </ToolBarContent>
+    <Columns>
+        <HierarchyColumn T="FlightPlan"></HierarchyColumn>
+        <PropertyColumn Property="x => x.Departure.ICAO" Title="Departure"/>
+        <PropertyColumn Property="x => x.Destination.ICAO" Title="Destination"/>
+    </Columns>
+    <ChildRowContent>
+        <MudCard>
+            @* <MudCardHeader> *@
+            @*     <CardHeaderContent> *@
+            @*         <MudText Typo="Typo.h6">@context.Item.Name</MudText> *@
+            @*     </CardHeaderContent> *@
+            @* </MudCardHeader> *@
+            <MudCardContent>
+                <MudText><b>Route:</b> @(string.Join(" \u2192 ", context.Item.Airports.Select(x => x.ICAO)))</MudText>
+            </MudCardContent>
+        </MudCard>
+    </ChildRowContent>
+</MudDataGrid>
+
+@code {
+    List<FlightPlan> FlightPlans = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(0);
+        FlightPlans.Add(new FlightPlan
+        {
+            Id = 1,
+            Airports = new List<Airport>
+            {
+                new Airport
+                {
+                    Id = 1,
+                    FIR = "EKDK",
+                    ICAO = "EKCH"
+                },
+                new Airport
+                {
+                    Id = 2,
+                    FIR = "EKDK",
+                    ICAO = "EKRK"
+                },
+                new Airport
+                {
+                    Id = 3,
+                    FIR = "EKDK",
+                    ICAO = "EKBI"
+                }
+            }
+        });
+    }
+}
