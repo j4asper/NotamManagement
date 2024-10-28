@@ -6,7 +6,11 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudSelect T="Importance"></MudSelect>
+        <MudSelect T="Importance">
+            @foreach (Importance item in Enum.GetValues(typeof(Importance))) {
+            <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
         <MudTextField T="string" Label="Server ID" ReadOnly="true"/>
     </DialogContent>
     <DialogActions>
