@@ -1,7 +1,22 @@
 @using NotamManagement.UI.Pages.Dialogs
-<MudCard Class="mb-2 ma-4" Style="width: 500px; height: 250px;">
-    <MudText>@Notam.Identifier</MudText>
-    <MudButton OnClick="OpenNotamActionCreateDialog">Do something</MudButton>
+<MudCard Elevation="0" Class="mb-2 ma-4 border-solid border-2 mud-border-primary pa-2" Style="width: 500px; height: 250px;">
+    @if (Notam.ReferenceIdentifier is not null)
+    {
+        <MudStack Row="true">
+            <MudText><b>@Notam.Identifier</b></MudText>
+            <MudSpacer/>
+            <MudText><b>@Notam.ReferenceIdentifier</b></MudText>
+        </MudStack>
+    }
+    else
+    {
+        <MudText><b>@Notam.Identifier</b></MudText>
+    }
+    <MudText><b>Type:</b> @Notam.Type</MudText>
+    <MudText><b>NOF:</b> @Notam.NotamOffice</MudText>
+    <MudText><b>Valid To:</b> @Notam.ValidFrom</MudText>
+    <MudText><b>Valid To:</b> @(Notam.IsPermanent ? "Permanent" : Notam.ValidTo)</MudText>
+    <MudButton Style="width: 200px;" OnClick="OpenNotamActionCreateDialog" Color="Color.Primary" Variant="Variant.Filled">Do something</MudButton>
 </MudCard>
 
 @code {

@@ -6,12 +6,16 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudSelect T="Importance">
-            @foreach (Importance item in Enum.GetValues(typeof(Importance))) {
-            <MudSelectItem Value="@item">@item</MudSelectItem>
+        <MudText Class="mb-2">
+            <pre>@Notam.RawNotam</pre>
+        </MudText>
+        <MudSelect T="Importance" Variant="Variant.Outlined" @bind-Value="@NotamAction!.Importance">
+            @foreach (Importance item in Enum.GetValues(typeof(Importance)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField T="string" Label="Server ID" ReadOnly="true"/>
+        <MudTextField T="string" @bind-Value="@NotamAction!.Note" Variant="Variant.Outlined" Lines="3" Label="Note"/>
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
@@ -26,7 +30,7 @@
     
     [EditorRequired] [Parameter] public Notam Notam { get; set; } = null!;
 
-    private NotamAction? NotamAction { get; set; } = null;
+    private NotamAction? NotamAction { get; set; }
 
     protected override void OnInitialized()
     {
