@@ -6,6 +6,7 @@ on:
       - 'main'
     paths:
       - NotamManagement.UI/**
+      - NotamManagement.Core/**
 
 jobs:
   build:
