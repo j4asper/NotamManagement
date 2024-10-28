@@ -6,11 +6,12 @@ public static class NotamHelper
 {
     public static IReadOnlyList<Notam> GetTestData()
 {
-    return new List<Notam>
+        return new List<Notam>
     {
         new Notam
         {
             Id = 1,
+            Location = "EKCH",
             ValidFrom = new DateTime(2024, 1, 1),
             ValidTo = new DateTime(2024, 12, 31),
             EffectiveValidTo = new DateTime(2024, 12, 31),
@@ -38,6 +39,7 @@ public static class NotamHelper
         new Notam
         {
             Id = 2,
+            Location = "EKDK",
             ValidFrom = new DateTime(2024, 2, 1),
             ValidTo = new DateTime(2024, 6, 30),
             EffectiveValidTo = null,
@@ -65,6 +67,7 @@ public static class NotamHelper
         new Notam
         {
             Id = 3,
+            Location = "EKCH",
             ValidFrom = new DateTime(2024, 3, 1),
             ValidTo = new DateTime(2024, 11, 30),
             EffectiveValidTo = null,
