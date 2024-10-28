@@ -261,6 +261,10 @@ namespace NotamManagement.Core.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("NotamOffice")
                         .IsRequired()
                         .HasColumnType("text");
@@ -319,7 +323,7 @@ namespace NotamManagement.Core.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("OrganizationId")
+                    b.Property<int>("OrganizationId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -507,7 +511,9 @@ namespace NotamManagement.Core.Migrations
                 {
                     b.HasOne("NotamManagement.Core.Models.Organization", null)
                         .WithMany("NotamActions")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("NotamManagement.Core.Models.User", b =>
