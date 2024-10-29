@@ -1,9 +1,11 @@
-﻿<MudSimpleTable Class="gap-2">
-    @foreach (var notamAction in NotamActions)
-    {
-        <NotamActionCardComponent NotamAction="notamAction"/>
-    }
-</MudSimpleTable>
+﻿<MudTable Items="new int[0]" Class="gap-2 overflow-x-hidden" FixedHeader="true" Style="height: 85vh" Virtualize="true">
+    <NoRecordsContent>
+        @foreach (var notamAction in NotamActions)
+        {
+            <NotamActionCardComponent NotamAction="notamAction"/>
+        }
+    </NoRecordsContent>
+</MudTable>
 
 @code {
     [EditorRequired] [Parameter] public List<NotamAction> NotamActions { get; set; } = null!;
