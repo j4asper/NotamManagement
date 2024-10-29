@@ -26,7 +26,7 @@
         try
         {
             // Post the login model to the API
-            var response = await Http.PostAsJsonAsync("https://localhost:7079/login", loginModel);
+            var response = await Http.PostAsJsonAsync("/login", loginModel);
             response.EnsureSuccessStatusCode();
 
             // Deserialize the JSON response into the TokenResponse object

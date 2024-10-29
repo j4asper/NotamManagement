@@ -1,38 +1,27 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.Components.Authorization
-@using NotamManagement.Core.Services
-
-@inject ApiAuthenticationStateProvider AuthStateProvider
-@inject NavigationManager Navigation
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
 
 <PageTitle>Home</PageTitle>
 
-<AuthorizeView>
-    <Authorized>
-        <MudStack Row="true">
-            <NotamListViewComponent Notams="Notams" />
+<MudStack Row="true">
+    <NotamListViewComponent Notams="Notams" />
 
-            <NotamActionListViewComponent NotamActions="NotamActions" />
-        </MudStack>
-    </Authorized>
-    <NotAuthorized>
-        <h1>You are not authorized to view this page</h1>
-    </NotAuthorized>
-
-</AuthorizeView>
-
-
-
+    <NotamActionListViewComponent NotamActions="NotamActions" />
+</MudStack>
 
 @code
 {
     [Inject] public INotamService NotamService { get; set; } = null!;
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
     
     private List<Notam> Notams = [];
     private List<NotamAction> NotamActions = [];
 
     protected override async Task OnInitializedAsync()
     {
+        await HttpClient.GetAsync("/api/notam/id/100");
+        
         var notams = await NotamService.GetAllNotamsAsync();
 
         Notams = notams.ToList();

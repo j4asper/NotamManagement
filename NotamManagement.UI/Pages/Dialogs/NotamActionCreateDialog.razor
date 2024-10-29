@@ -6,9 +6,13 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudText Class="mb-2">
-            <pre>@Notam.RawNotam</pre>
-        </MudText>
+        <MudExpansionPanels Class="mb-2">
+            <MudExpansionPanel Text="View Raw NOTAM">
+                <MudText>
+                    <pre>@Notam.RawNotam</pre>
+                </MudText>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
         <MudSelect T="Importance" Variant="Variant.Outlined" @bind-Value="@NotamAction!.Importance">
             @foreach (Importance item in Enum.GetValues(typeof(Importance)))
             {

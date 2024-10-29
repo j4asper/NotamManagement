@@ -53,7 +53,7 @@
             }
 
             // Post the register model to the API
-            var response = await Http.PostAsJsonAsync("https://localhost:7079/register", registerModel);
+            var response = await Http.PostAsJsonAsync("/register", registerModel);
             response.EnsureSuccessStatusCode();
             Navigation.NavigateTo("/");
         }
