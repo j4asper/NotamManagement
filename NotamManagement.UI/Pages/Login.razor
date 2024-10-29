@@ -1,5 +1,69 @@
-﻿@page "/Login"
+﻿@page "/login"
+@using System.Net.Http.Headers
+@using NotamManagement.Core.Services
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject ApiAuthenticationStateProvider AuthStateProvider
+
+<h3>Login</h3>
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputText @bind-Value="loginModel.Email" placeholder="Email" />
+    <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password" />
+    <button type="submit">Login</button>
+</EditForm>
 
 @code {
-    
+    private LoginModel loginModel = new();
+    private string errorMessage;
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            // Post the login model to the API
+            var response = await Http.PostAsJsonAsync("https://notam-management-api.jazper.dk/login", loginModel);
+            response.EnsureSuccessStatusCode();
+
+            // Deserialize the JSON response into the TokenResponse object
+            var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+            // Access the access token from the response
+            var token = tokenResponse.AccessToken;
+
+            // Store the token in local storage
+            await localStorage.SetItemAsync("jwt_token", token);
+
+            // Set the default authorization header for the HttpClient
+            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            // Notify the AuthenticationStateProvider that the user is now authenticated
+            AuthStateProvider.NotifyUserAuthentication(token);
+
+            // Navigate to the home page
+            Navigation.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Login failed: {ex.Message}";
+        }
+    }
+
+    public class LoginModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class TokenResponse
+{
+    public string TokenType { get; set; } // "Bearer"
+    public string AccessToken { get; set; } // The actual token string
+    public int ExpiresIn { get; set; } // Expiration time in seconds
+    public string RefreshToken { get; set; } // The refresh token string
+}
 }
