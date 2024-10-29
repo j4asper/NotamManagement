@@ -14,6 +14,7 @@ public class NotamService : INotamService
         this.config = config;
         httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(config.GetRequiredSection("ApiBaseUrl").Value ?? "");
+        httpClient.BaseAddress = new Uri("https://localhost:7079");
     }
     
     

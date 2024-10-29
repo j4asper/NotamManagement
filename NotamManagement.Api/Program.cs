@@ -7,6 +7,9 @@ using NotamManagement.Core.Data;
 using NotamManagement.Core.Models;
 using NotamManagement.Core.Repository;
 using System.Text;
+using NotamManagement.Api.Extensions;
+using NotamManagement.Api.Helper;
+using NotamManagement.Core.Services;
 
 
 namespace NotamManagement.Api;
@@ -42,10 +45,30 @@ public class Program
         builder.Services.AddScoped<IRepository<NotamAction>, NotamActionRepository>();
         builder.Services.AddScoped<IRepository<Organization>, OrganizationRepository>();
         builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
-
+        builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomUserClaimsPrincipalFactory>();
         builder.Services.AddAuthorization();
+        builder.Services.AddSingleton<JwtTokenService>();
         builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<NotamManagementContext>();
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "Issuer",
+        ValidAudience = "Audience",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("uNUcG9yZThie3MqaG47K2xrR1RLZmFpYzMwRHRtLkR5Yk0="))
+    };
+});
 
         var app = builder.Build();
 
@@ -56,7 +79,7 @@ public class Program
             app.UseSwaggerUI();
         }
         app.UseCors("AllowAll");
-        app.MapIdentityApi<User>();
+        app.MapCustomIdentityApi<User>();
         app.UseAuthentication();
         app.UseAuthorization();
        

@@ -1,0 +1,65 @@
+﻿@page "/register"
+@using System.Net.Http.Headers
+@using NotamManagement.Core.Services
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject ApiAuthenticationStateProvider AuthStateProvider
+
+<h3>Register</h3>
+
+<EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div>
+        <InputText @bind-Value="registerModel.Email" placeholder="Email" />
+        <InputText @bind-Value="registerModel.Password" placeholder="Password" type="password" />
+        <InputText @bind-Value="registerModel.ConfirmPassword" placeholder="Confirm Password" type="password" />
+        <InputText @bind-Value="registerModel.FirstName" placeholder="First Name" />
+        <InputText @bind-Value="registerModel.LastName" placeholder="Last Name" />
+        <button type="submit">Register</button>
+    </div>
+    <label>@errorMessage</label>
+</EditForm>
+
+@code {
+    private RegisterDTO registerModel = new();
+    private string errorMessage;
+
+    private async Task HandleRegister()
+    {
+        try
+        {
+            if (registerModel.Password != registerModel.ConfirmPassword)
+            {
+                throw new Exception("Passwords do not match");
+            }
+
+            // Get the authentication state
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            // Retrieve the OrganizationId claim
+            var organizationIdClaim = user.FindFirst("OrganizationId");
+            if (organizationIdClaim != null)
+            {
+                registerModel.OrganizationId = int.Parse(organizationIdClaim.Value);
+            }
+            else
+            {
+                throw new Exception("OrganizationId claim not found");
+            }
+
+            // Post the register model to the API
+            var response = await Http.PostAsJsonAsync("https://localhost:7079/register", registerModel);
+            response.EnsureSuccessStatusCode();
+            Navigation.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Register failed: {ex.Message}";
+        }
+    }
+}

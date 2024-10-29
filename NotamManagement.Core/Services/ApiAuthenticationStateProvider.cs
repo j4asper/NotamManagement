@@ -43,13 +43,30 @@ namespace NotamManagement.Core.Services
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             var claims = new List<Claim>();
+
             try
             {
                 var payload = jwt.Split('.')[1];
                 var jsonBytes = ParseBase64WithoutPadding(payload);
                 var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-                claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
+                if (keyValuePairs != null)
+                {
+                    foreach (var kvp in keyValuePairs)
+                    {
+                        if (kvp.Value != null)
+                        {
+                            string claimType = kvp.Key switch
+                            {
+                                "sub" => ClaimTypes.NameIdentifier,
+                                "email" => ClaimTypes.Email,
+                                "OrganizationId" => "organizationid",  // Custom claim type for organization ID
+                                _ => kvp.Key
+                            };
+                            claims.Add(new Claim(claimType, kvp.Value.ToString()));
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
