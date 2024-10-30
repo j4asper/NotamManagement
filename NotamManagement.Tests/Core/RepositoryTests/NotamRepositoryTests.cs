@@ -115,4 +115,49 @@ public class NotamRepositoryTests
         var result = await repository.GetByIdAsync(notam.Id);
         Assert.Equal("Updated Notam Text", result.NotamText);
     }
+
+    //[Fact]
+    //public async Task GetUnhandledNotams_ShouldReturnNotamsThatHasNotBeenCancelled()
+    //{
+    //    var repository = new NotamRepository(context);
+
+    //    // Arrange
+    //    foreach (var notam in notams)
+    //    {
+    //        await repository.AddAsync(notam);
+    //    }
+        
+
+    //    // Act
+    //    var result = await repository.GetAllUnhandledAsync(1);
+
+    //    // Assert
+      
+    //    Assert.Equal(notams.Count-3,result.Count);
+    //}
+    [Fact]
+    public async Task GetUnhandledNotams_ShouldReturnNotamsThatAreNotCancelledOrInReferenceChain()
+    {
+        // Arrange
+        var repository = new NotamRepository(context);
+
+        foreach (var notam in notams)
+        {
+            await repository.AddAsync(notam);
+        }
+
+        // Act
+        var result = await repository.GetAllUnhandledAsync(1);
+
+        // Assert: Based on the provided notams, 3 should be excluded (D507/24, D506/24, and D405/24)
+        Assert.Equal(notams.Count - 3, result.Count);
+
+        // Verify the exact `Notams` remaining by Identifier
+        var remainingIdentifiers = result.Select(n => n.Identifier).ToList();
+        var excludedIdentifiers = new List<string> { "D507/24", "D506/24", "D405/24" };
+        Assert.DoesNotContain(remainingIdentifiers, id => excludedIdentifiers.Contains(id));
+    }
+
+
+
 }
