@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NotamManagement.Core.Data;
 using NotamManagement.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NotamManagement.Core.Repository
 {
@@ -27,19 +22,18 @@ namespace NotamManagement.Core.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddRangeAsync(IEnumerable<FlightPlan> entities)
+        public async Task AddRangeAsync(IReadOnlyList<FlightPlan> entities)
         {
             await _dbSet.AddRangeAsync(entities);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<FlightPlan>> FindAsync(Expression<Func<FlightPlan, bool>> predicate)
+        public async Task<IReadOnlyList<FlightPlan>> FindAsync(Expression<Func<FlightPlan, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
-
         }
 
-        public async Task<IEnumerable<FlightPlan>> GetAllAsync()
+        public async Task<IReadOnlyList<FlightPlan>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
@@ -65,7 +59,7 @@ namespace NotamManagement.Core.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveRangeAsync(IEnumerable<FlightPlan> entities)
+        public async Task RemoveRangeAsync(IReadOnlyList<FlightPlan> entities)
         {
             _dbSet.RemoveRange(entities);
             await _context.SaveChangesAsync();

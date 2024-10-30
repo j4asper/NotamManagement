@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NotamManagement.Core.Data;
 using NotamManagement.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NotamManagement.Core.Repository
 {
@@ -26,17 +21,17 @@ namespace NotamManagement.Core.Repository
             throw new NotImplementedException();
         }
 
-        public Task AddRangeAsync(IEnumerable<User> entities)
+        public Task AddRangeAsync(IReadOnlyList<User> entities)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<User>> FindAsync(Expression<Func<User, bool>> predicate)
+        public async Task<IReadOnlyList<User>> FindAsync(Expression<Func<User, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IReadOnlyList<User>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
@@ -62,7 +57,7 @@ namespace NotamManagement.Core.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveRangeAsync(IEnumerable<User> entities)
+        public async Task RemoveRangeAsync(IReadOnlyList<User> entities)
         {
             _dbSet.RemoveRange(entities);
             await _context.SaveChangesAsync();
