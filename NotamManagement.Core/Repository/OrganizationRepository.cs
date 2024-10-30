@@ -23,7 +23,15 @@ namespace NotamManagement.Core.Repository
             _context.SaveChanges();
         }
 
+
+        public Task<IReadOnlyList<Organization>> GetAllUnhandledAsync(int organizationId)
+        {
+            throw new NotImplementedException();
+        }
+
+
         public async Task AddRangeAsync(IReadOnlyList<Organization> entities)
+
         {
             await _dbSet.AddRangeAsync(entities);
             await _context.SaveChangesAsync();

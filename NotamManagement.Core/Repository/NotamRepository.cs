@@ -28,7 +28,53 @@ namespace NotamManagement.Core.Repository
             return await _dbSet.Include(n => n.Coordinates).ToListAsync();
         }
 
+
+        public async Task<IReadOnlyList<Notam>> GetAllUnhandledAsync(int organizationId)
+        {
+            // Step 1: Initialize a list of identifiers to exclude, starting with all canceled Notams
+            var excludedReferenceIds = await _dbSet
+                .Where(n => n.Type == NotamType.Cancellation)
+                .Select(n => n.Identifier)
+                .ToListAsync();
+
+            // Step 2: Find all Notams that reference any excluded identifier (recursive chain)
+            bool newReferencesFound;
+            do
+            {
+                // Find new references that should also be excluded
+                var newReferences = await _dbSet
+                    .Where(n => n.ReferenceIdentifier != null
+                                && excludedReferenceIds.Contains(n.ReferenceIdentifier)
+                                && !excludedReferenceIds.Contains(n.Identifier))
+                    .Select(n => n.Identifier)
+                    .ToListAsync();
+
+                newReferencesFound = newReferences.Any();
+                excludedReferenceIds.AddRange(newReferences);
+
+            } while (newReferencesFound);
+
+            // Step 3: Query to get all unhandled Notams, excluding those in the canceled reference chain
+            return await _dbSet
+                .Include(n => n.Coordinates)
+                .Where(n => n.Type != NotamType.Cancellation
+                            && (n.ReferenceIdentifier == null || !excludedReferenceIds.Contains(n.ReferenceIdentifier)))
+                .GroupJoin(_context.NotamActions.Where(na => na.OrganizationId == organizationId),
+                    notam => notam.Id,
+                    action => action.NotamId,
+                    (notam, actions) => new { Notam = notam, Actions = actions })
+                .SelectMany(
+                    x => x.Actions.DefaultIfEmpty(),
+                    (x, action) => new { x.Notam, Action = action })
+                .Where(x => x.Action == null)
+                .Select(x => x.Notam)
+                .ToListAsync();
+        }
+
+
+
         public async Task<IReadOnlyList<Notam>> FindAsync(Expression<Func<Notam, bool>> predicate)
+
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }

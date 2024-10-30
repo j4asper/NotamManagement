@@ -22,7 +22,15 @@ namespace NotamManagement.Core.Repository
             _context.SaveChanges();
         }
 
+
+        public Task<IReadOnlyList<Airport>> GetAllUnhandledAsync(int organizationId)
+        {
+            throw new NotImplementedException();
+        }
+
+
         public Task AddRangeAsync(IReadOnlyList<Airport> entities)
+
         {
             throw new NotImplementedException();
         }
