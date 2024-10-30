@@ -46,10 +46,10 @@ public class NotamControllerTests
 
         // Act
         var result = await controller.GetNotamByIdAsync(notam.Id);
-
-        // Assert
-        var okResult = Assert.IsType<Notam>(result.Value);
-        Assert.Equal(notam.Id, okResult.Id);
+        
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var notamResult = okResult.Value as Notam;
+        Assert.Equal(notam.Id, notamResult.Id);
     }
 
     [Fact]
