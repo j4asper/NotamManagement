@@ -24,7 +24,7 @@ public class NotamController : ControllerBase
     public async Task<ActionResult<Notam>> GetNotamByIdAsync(int notamId, CancellationToken cancellationToken = default)
     {
         var notam = await _notamRepository.GetByIdAsync(notamId);
-        return notam == null? NotFound() : notam;
+        return notam == null? NotFound() : Ok(notam);
       
     }
     
@@ -34,7 +34,7 @@ public class NotamController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<Notam>>> GetNotamsByOrganizationIdAsync(int organizationId, CancellationToken cancellationToken = default)
     {
         var notams = await _notamRepository.GetAllUnhandledAsync(organizationId);
-        return notams == null ? NotFound() : notams.ToList();
+        return notams == null ? NotFound() : Ok(notams.ToList());
     }
     
     [HttpDelete("Id/{notamId:int}")]
@@ -42,7 +42,7 @@ public class NotamController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DeleteNotamByIdAsync(int notamId, CancellationToken cancellationToken = default)
     {
-         await _notamRepository.RemoveAsync(notamId);
+        await _notamRepository.RemoveAsync(notamId);
         return Ok();
     }
     

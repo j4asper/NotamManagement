@@ -23,6 +23,10 @@ public class AirportController : ControllerBase
     public async Task<ActionResult<Airport>> GetAirportByIdAsync(int airportId, CancellationToken cancellationToken = default)
     {
         var airport = await _airportRepository.GetByIdAsync(airportId);
+        
+        if (airport == null)
+            return NotFound();
+        
         return Ok(airport);
     }
     
@@ -32,7 +36,7 @@ public class AirportController : ControllerBase
     public async Task<ActionResult> DeleteAirportByIdAsync(int airportId, CancellationToken cancellationToken = default)
     {
         await _airportRepository.RemoveAsync(airportId);
-        return NoContent();
+        return Ok();
     }
     
     [HttpPut("Id/{airportId:int}")]
