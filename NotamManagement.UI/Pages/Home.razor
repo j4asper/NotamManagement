@@ -2,6 +2,7 @@
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 
+
 <PageTitle>Home</PageTitle>
 
 <MudStack Row="true">
@@ -14,6 +15,7 @@
 {
     [Inject] public INotamService NotamService { get; set; } = null!;
     [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public INotamActionService notamActionService { get; set; } = null!;
     
     private List<Notam> Notams = [];
     private List<NotamAction> NotamActions = [];

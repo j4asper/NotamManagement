@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotamManagement.Core.Models;
 using NotamManagement.Core.Repository;
+using System.Security.Claims;
+using System.Web;
 
 namespace NotamManagement.Api.Controllers;
 
@@ -9,10 +12,12 @@ namespace NotamManagement.Api.Controllers;
 public class NotamActionController : ControllerBase
 {
     private readonly IRepository<NotamAction> _notamActionRepository;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public NotamActionController(IRepository<NotamAction> notamActionRepository)
+    public NotamActionController(IRepository<NotamAction> notamActionRepository, IHttpContextAccessor httpContextAccessor)
     {
         _notamActionRepository = notamActionRepository;
+        _httpContextAccessor = httpContextAccessor;
     }
 
 
@@ -54,12 +59,14 @@ public class NotamActionController : ControllerBase
         return Ok(nAction);
     }
     
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IReadOnlyList<NotamAction>>> GetAllNotamActionsAsync(CancellationToken cancellationToken = default)
     {
-       var notams = await _notamActionRepository.GetAllAsync();
+        var orgID = _httpContextAccessor.HttpContext.User.FindFirst("OrganizationId").Value;
+        var notams = await _notamActionRepository.GetAllAsync(int.Parse(orgID));
         return Ok(notams);
     }
     

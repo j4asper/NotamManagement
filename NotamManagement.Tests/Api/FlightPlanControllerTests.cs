@@ -88,7 +88,7 @@ public class FlightPlanControllerTests
     public async Task GetAllFlightPlansAsync_ReturnsListOfFlightPlans()
     {
         // Arrange
-        mockRepository.Setup(repo => repo.GetAllAsync())
+        mockRepository.Setup(repo => repo.GetAllAsync(null))
             .ReturnsAsync(flightPlans); // Return the predefined list
 
         // Act

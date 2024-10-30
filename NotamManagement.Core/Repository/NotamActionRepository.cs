@@ -47,7 +47,7 @@ namespace NotamManagement.Core.Repository
             {
                 return await _dbSet.Where(x => x.OrganizationId == organizationId).ToListAsync();
             }
-            return [];
+            return await _dbSet.ToListAsync();
             
         }
 

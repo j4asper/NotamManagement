@@ -87,7 +87,7 @@ public class AirportControllerTests
     public async Task GetAllAirportsAsync_ReturnsListOfAirports()
     {
         // Arrange
-        mockRepository.Setup(repo => repo.GetAllAsync())
+        mockRepository.Setup(repo => repo.GetAllAsync(null))
             .ReturnsAsync(airports); // Return the predefined list
 
         // Act

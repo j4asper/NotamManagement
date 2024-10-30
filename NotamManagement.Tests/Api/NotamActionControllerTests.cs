@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NotamManagement.Api.Controllers;
 using NotamManagement.Core.Models;
 using NotamManagement.Core.Repository;
 using NotamManagement.Tests.Helpers;
+using System.Security.Claims;
 
 namespace NotamManagement.Tests.Api;
 
@@ -12,11 +14,13 @@ public class NotamActionControllerTests
     private readonly IReadOnlyList<NotamAction> notamActions;
     private readonly Mock<IRepository<NotamAction>> mockRepository;
     private readonly NotamActionController controller;
+    private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
 
     public NotamActionControllerTests()
     {
         mockRepository = new Mock<IRepository<NotamAction>>();
-        controller = new NotamActionController(mockRepository.Object);
+        mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+        controller = new NotamActionController(mockRepository.Object,mockHttpContextAccessor.Object);
         notamActions = NotamActionHelper.GetTestData();
     }
     
@@ -87,9 +91,12 @@ public class NotamActionControllerTests
     public async Task GetAllNotamActionsAsync_ReturnsListOfNotamActions()
     {
         // Arrange
-        mockRepository.Setup(repo => repo.GetAllAsync())
+        var organizationClaim = new Claim("OrganizationId", "1");
+        mockHttpContextAccessor.Setup(x => x.HttpContext.User.FindFirst("OrganizationId"))
+            .Returns(organizationClaim);
+        mockRepository.Setup(repo => repo.GetAllAsync(1))
             .ReturnsAsync(notamActions); // Return the predefined list
-
+        
         // Act
         var result = await controller.GetAllNotamActionsAsync();
 

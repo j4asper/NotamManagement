@@ -72,6 +72,7 @@ public class Program
         builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
         builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomUserClaimsPrincipalFactory>();
         builder.Services.AddAuthorization();
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddSingleton<JwtTokenService>();
         builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<NotamManagementContext>();
