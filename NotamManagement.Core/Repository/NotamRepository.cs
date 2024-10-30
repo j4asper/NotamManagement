@@ -54,7 +54,7 @@ namespace NotamManagement.Core.Repository
 
             } while (newReferencesFound);
 
-            var newrefs = await _dbSet.Where(n => n.ReferenceIdentifier == null&&!excludedReferenceIds.Contains(n.Identifier)).Select(n => n.Identifier).ToListAsync();
+            var newrefs = await _dbSet.Where(n => n.ReferenceIdentifier == null&&excludedReferenceIds.Contains(n.Identifier)).Select(n => n.Identifier).ToListAsync();
             excludedReferenceIds.AddRange(newrefs);
             // Step 3: Exclude any Notam that is canceled or references a canceled identifier
             return await _dbSet

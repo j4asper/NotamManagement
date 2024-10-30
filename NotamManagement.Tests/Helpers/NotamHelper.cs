@@ -174,6 +174,34 @@ public static class NotamHelper
                 LowerFlightLevel = 100,
                 Radius = 25
             }
+        },
+        new Notam
+        {
+            Id = 12,
+            Location = "EKCH",
+            ValidFrom = new DateTime(2024, 5, 1),
+            ValidTo = new DateTime(2024, 9, 30),
+            EffectiveValidTo = null,
+            Type = NotamType.New,
+            NotamOffice = "EKCH",
+            QCode = "FPVV",
+            Identifier = "D555/24",
+            ReferenceIdentifier = null,
+            FIR = "EKDK",
+            Purpose = "BO",
+            Traffic = "IV",
+            Scope = "A",
+            NotamText = "NEW RESTRICTIONS IN FLIGHT SECTOR.",
+            Coordinates = new Coordinates
+            {
+                Id = 12,
+                NotamId = 12,
+                Longitude = (float)12.2,
+                Latitude = (float)55.3,
+                UpperFlightLevel = 500,
+                LowerFlightLevel = 100,
+                Radius = 25
+            }
         }
     };
 }
