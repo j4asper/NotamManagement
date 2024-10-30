@@ -32,7 +32,7 @@ public class AirportController : ControllerBase
     public async Task<ActionResult> DeleteAirportByIdAsync(int airportId, CancellationToken cancellationToken = default)
     {
         await _airportRepository.RemoveAsync(airportId);
-        return NoContent();
+        return Ok();
     }
     
     [HttpPut("Id/{airportId:int}")]
