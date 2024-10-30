@@ -60,9 +60,7 @@
 
     public class TokenResponse
 {
-    public required string TokenType { get; set; } // "Bearer"
     public required string AccessToken { get; set; } // The actual token string
     public int ExpiresIn { get; set; } // Expiration time in seconds
-    public required string RefreshToken { get; set; } // The refresh token string
 }
 }
