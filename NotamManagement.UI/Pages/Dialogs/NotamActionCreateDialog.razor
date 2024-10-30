@@ -31,26 +31,24 @@
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
 
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
+
+    [Inject] public INotamActionService NotamActionService { get; set; } = null!;
     
     [EditorRequired] [Parameter] public Notam Notam { get; set; } = null!;
 
     private NotamAction? NotamAction { get; set; }
 
-    protected override void OnInitialized()
-    {
-        NotamAction = new NotamAction
-        {
-            NotamId = Notam.Id,
-            OrganizationId = 1,
-            Note = string.Empty
-        };
-    }
-
     private void Cancel() => MudDialog.Cancel();
 
     private void Save()
     {
+        if (NotamAction == null)
+        {
+            return;
+        }
         // Save new notam action with NotamActionService
+        NotamAction.NotamId = Notam.Id;
+        NotamActionService.AddAsync(NotamAction);
         Snackbar.Add("Notam Action Created!", Severity.Success);
         MudDialog.Close(DialogResult.Ok(Notam));
     }

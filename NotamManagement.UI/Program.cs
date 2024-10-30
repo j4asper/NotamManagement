@@ -20,6 +20,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddApiAuthorization(); 
 builder.Services.AddScoped<ApiAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<ApiAuthenticationStateProvider>());
+builder.Services.AddScoped<INotamActionService, NotamActionService>();
 
 
 builder.Services.AddMudServices();

@@ -31,7 +31,7 @@ public class Program
         {
             options.AddPolicy("AllowAll", _builder =>
             {
-                _builder.WithOrigins("https://notam-management.jazper.dk/").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                _builder.WithOrigins("https://notam-management.jazper.dk").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
             });
         });
         
