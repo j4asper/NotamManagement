@@ -7,6 +7,7 @@ using NotamManagement.Core.Data;
 using NotamManagement.Core.Models;
 using NotamManagement.Core.Repository;
 using System.Text;
+using Microsoft.OpenApi.Models;
 using NotamManagement.Api.Extensions;
 using NotamManagement.Api.Helper;
 using NotamManagement.Core.Services;
@@ -30,12 +31,36 @@ public class Program
         {
             options.AddPolicy("AllowAll", _builder =>
             {
-                _builder.WithOrigins("https://notam-management.jazper.dk").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                _builder.WithOrigins("http://localhost:5185").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
             });
         });
-
         
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
+        
         builder.Services.AddDbContext<NotamManagementContext>(options =>
         options.UseNpgsql(builder.Configuration.GetRequiredSection("Database:ConnectionString").Value));
         builder.Services.AddScoped<IRepository<Notam>, NotamRepository>();
