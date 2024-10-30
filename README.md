@@ -1,9 +1,6 @@
 ![UI Uptime Badge](https://kuma.uptime-vps.jazper.dk/api/badge/7/uptime/48?labelPrefix=UI+&style=for-the-badge)
 ![API Uptime Badge](https://kuma.uptime-vps.jazper.dk/api/badge/8/uptime/48?labelPrefix=API+&style=for-the-badge)  
-![Docker UI CI](https://github.com/j4asper/NotamManagement/actions/workflows/UI-Docker-Image-CI.yml/badge.svg)
-![Docker API CI](https://github.com/j4asper/NotamManagement/actions/workflows/Api-Docker-Image-CI.yml/badge.svg)
-![Unit Test CI](https://github.com/j4asper/NotamManagement/actions/workflows/dotnet.yml/badge.svg)
-
+![Workflow Runs](https://github.com/j4asper/NotamManagement/actions/workflows/CI-Workflow.yml/badge.svg)
 # NotamManagement
 Notam Management Project in collaboration with [AIRSUPPORT A/S](https://ppsflightplanning.com/).
 
