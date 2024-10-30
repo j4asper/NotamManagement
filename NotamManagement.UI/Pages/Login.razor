@@ -8,14 +8,14 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject ApiAuthenticationStateProvider AuthStateProvider
 
-<h3>Login</h3>
-<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <InputText @bind-Value="loginModel.Email" placeholder="Email" />
-    <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password" />
-    <button type="submit">Login</button>
-</EditForm>
+<MudPaper Class="pa-4" Width="400px">
+    <MudText Class="mb-2" Typo="Typo.h4">Login</MudText>
+    <MudForm Class="gap-2" Model="@loginModel">
+        <MudTextField T="string" Immediate="true" Variant="Variant.Outlined" Required="true" @bind-Value="@loginModel.Email" For="@(() => loginModel.Email)" Placeholder="Email" InputType="InputType.Email"/>
+        <MudTextField T="string" Immediate="true" Variant="Variant.Outlined" Required="true" @bind-Value="@loginModel.Password" For="@(() => loginModel.Password)" Placeholder="Password" InputType="InputType.Password"/>
+        <MudButton OnClick="@HandleLogin" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+    </MudForm>
+</MudPaper>
 
 @code {
     private LoginModel loginModel = new();
