@@ -23,36 +23,11 @@
     protected override async Task OnInitializedAsync()
     {
        
-        
+        var notamActions = await notamActionService.GetAllNotamActionsAsync();
         var notams = await NotamService.GetAllNotamsAsync();
-
+        NotamActions = notamActions.ToList();
         Notams = notams.ToList();
         
-        NotamActions.Add(new NotamAction
-        {
-            Id = 1,
-            OrganizationId = 1,
-            Importance = Importance.Important,
-            NotamId = 1,
-            Note = "Look at this"
-        });
         
-        NotamActions.Add(new NotamAction
-        {
-            Id = 2,
-            OrganizationId = 2,
-            Importance = Importance.Default,
-            NotamId = 2,
-            Note = "Look at this"
-        });
-        
-        NotamActions.Add(new NotamAction
-        {
-            Id = 3,
-            OrganizationId = 1,
-            Importance = Importance.Ignore,
-            NotamId = 3,
-            Note = "Look at this",
-        });
     }
 }
