@@ -1,16 +1,15 @@
 ﻿@page "/login"
 @using System.Net.Http.Headers
-@using NotamManagement.Core.Services
-@using Microsoft.AspNetCore.Components.Authorization
 
 @inject HttpClient Http
 @inject NavigationManager Navigation
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject ApiAuthenticationStateProvider AuthStateProvider
 
 <MudPaper Class="pa-4" Width="400px">
     <MudText Class="mb-2" Typo="Typo.h4">Login</MudText>
     <MudForm Class="gap-2" Model="@loginModel">
+        <MudText>@errorMessage</MudText>
         <MudTextField T="string" Immediate="true" Variant="Variant.Outlined" Required="true" @bind-Value="@loginModel.Email" For="@(() => loginModel.Email)" Placeholder="Email" InputType="InputType.Email"/>
         <MudTextField T="string" Immediate="true" Variant="Variant.Outlined" Required="true" @bind-Value="@loginModel.Password" For="@(() => loginModel.Password)" Placeholder="Password" InputType="InputType.Password"/>
         <MudButton OnClick="@HandleLogin" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
@@ -33,10 +32,10 @@
             var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
 
             // Access the access token from the response
-            var token = tokenResponse.AccessToken;
+            var token = tokenResponse!.AccessToken;
 
             // Store the token in local storage
-            await localStorage.SetItemAsync("jwt_token", token);
+            await LocalStorage.SetItemAsync("jwt_token", token);
 
             // Set the default authorization header for the HttpClient
             Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -55,15 +54,15 @@
 
     public class LoginModel
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 
     public class TokenResponse
 {
-    public string TokenType { get; set; } // "Bearer"
-    public string AccessToken { get; set; } // The actual token string
+    public required string TokenType { get; set; } // "Bearer"
+    public required string AccessToken { get; set; } // The actual token string
     public int ExpiresIn { get; set; } // Expiration time in seconds
-    public string RefreshToken { get; set; } // The refresh token string
+    public required string RefreshToken { get; set; } // The refresh token string
 }
 }
