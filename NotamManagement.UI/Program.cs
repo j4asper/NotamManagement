@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using NotamManagement.Core.Services;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using NotamManagement.UI;
 using Blazored.LocalStorage;
 
@@ -11,7 +10,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApiBaseUrl")!) });
+builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApiBaseUrl")!) });
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<INotamService, NotamService>();
