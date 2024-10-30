@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NotamManagement.Core.Data;
 using NotamManagement.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace NotamManagement.Core.Repository
 {
@@ -27,11 +23,11 @@ namespace NotamManagement.Core.Repository
             return await _dbSet.Include(n => n.Coordinates).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<Notam>> GetAllAsync()
+        public async Task<IReadOnlyList<Notam>> GetAllAsync()
         {
-
             return await _dbSet.Include(n => n.Coordinates).ToListAsync();
         }
+
 
         public async Task<IReadOnlyList<Notam>> GetAllUnhandledAsync(int organizationId)
         {
@@ -77,7 +73,8 @@ namespace NotamManagement.Core.Repository
 
 
 
-        public async Task<IEnumerable<Notam>> FindAsync(Expression<Func<Notam, bool>> predicate)
+        public async Task<IReadOnlyList<Notam>> FindAsync(Expression<Func<Notam, bool>> predicate)
+
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
@@ -88,7 +85,7 @@ namespace NotamManagement.Core.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddRangeAsync(IEnumerable<Notam> entities)
+        public async Task AddRangeAsync(IReadOnlyList<Notam> entities)
         {
             await _dbSet.AddRangeAsync(entities);
             await _context.SaveChangesAsync();
@@ -118,7 +115,7 @@ namespace NotamManagement.Core.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveRangeAsync(IEnumerable<Notam> entities)
+        public async Task RemoveRangeAsync(IReadOnlyList<Notam> entities)
         {
             _dbSet.RemoveRange(entities);
             await _context.SaveChangesAsync();

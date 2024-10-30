@@ -15,16 +15,16 @@ namespace NotamManagement.Core.Repository
         Task<T?> GetByIdAsync(string id);
 
         // Get all entities
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IReadOnlyList<T>> GetAllAsync();
 
         // Find entities based on criteria
-        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate);
 
         // Add a new entity
         Task AddAsync(T entity);
 
         // Add multiple entities
-        Task AddRangeAsync(IEnumerable<T> entities);
+        Task AddRangeAsync(IReadOnlyList<T> entities);
 
         // Update an existing entity
         Task UpdateAsync(T entity);
@@ -36,6 +36,6 @@ namespace NotamManagement.Core.Repository
         Task RemoveAsync(T entity);
 
         // Remove multiple entities
-        Task RemoveRangeAsync(IEnumerable<T> entities);
+        Task RemoveRangeAsync(IReadOnlyList<T> entities);
     }
 }

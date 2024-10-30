@@ -53,7 +53,7 @@ public class NotamController : ControllerBase
     {
         var notams = await _notamRepository.GetAllAsync();
         
-        return notams == null ? [] : notams.Take(10).ToList();
+        return Ok(notams);
     }
     
     [HttpPost]
