@@ -1,12 +1,13 @@
 name: UI Docker Image CI
 
 on:
-  push:
-    branches:
-      - 'main'
-    paths:
-      - NotamManagement.UI/**
-      - NotamManagement.Core/**
+  workflow_dispatch
+#  push:
+#    branches:
+#      - 'main'
+#    paths:
+#      - NotamManagement.UI/**
+#      - NotamManagement.Core/**
 
 jobs:
   build:

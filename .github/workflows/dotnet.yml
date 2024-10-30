@@ -1,15 +1,16 @@
 name: .NET Unit Test Workflow
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - NotamManagement.Api/**
-      - NotamManagement.Core/**
-      - NotamManagement.UI/**
-      - NotamManagement.Tests/**
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch
+#  push:
+#    branches: [ "main" ]
+#    paths:
+#      - NotamManagement.Api/**
+#      - NotamManagement.Core/**
+#      - NotamManagement.UI/**
+#      - NotamManagement.Tests/**
+#  pull_request:
+#    branches: [ "main" ]
 
 jobs:
   build:
