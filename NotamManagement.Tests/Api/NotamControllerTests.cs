@@ -94,8 +94,10 @@ public class NotamControllerTests
         var result = await controller.GetAllNotamsAsync();
 
         // Assert
-        var okResult = Assert.IsType<List<Notam>>(result.Value);
-        Assert.Equal(notams.Count, okResult.Count);
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var notamList = okResult.Value as IReadOnlyList<Notam>;
+        Assert.NotNull(notamList);
+        Assert.Equal(notams.Count, notamList.Count);
     }
 
     [Fact]
