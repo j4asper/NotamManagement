@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NotamManagement.Core.Models;
@@ -81,12 +82,12 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             {
                 UserName = email,
                 Email = email,
-                FullName = registration.FirstName + " " + registration.LastName,
+                FullName = registration.FullName,
                 DateOfBirth = registration.DateOfBirth,
                 OrganizationId = registration.OrganizationId
             };
 
-            var result = await userManager.CreateAsync(user, registration.Password);
+            var result = await userManager.CreateAsync(user, registration.Password!);
 
             if (!result.Succeeded)
             {
@@ -100,7 +101,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             await SendConfirmationEmailAsync(user, userManager, context, email);
 
             // Generate JWT token
-            var token = jwtTokenService.GenerateToken(user.Id, user.Email, user.OrganizationId.ToString());
+            var token = jwtTokenService.GenerateToken(user.Id, user.Email, user.OrganizationId.ToString()!);
 
             return TypedResults.Ok(new AccessTokenResponse
             {
@@ -116,12 +117,16 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             var jwtTokenService = sp.GetRequiredService<JwtTokenService>();
 
             var user = await signInManager.UserManager.FindByEmailAsync(login.Email);
+            if (user == null)
+            {
+                return TypedResults.Problem("Invalid login credentials.", statusCode: StatusCodes.Status401Unauthorized);
+            }
             var isValid = await signInManager.CheckPasswordSignInAsync(user, login.Password, lockoutOnFailure: false);
 
             if (isValid.Succeeded)
             {
                 // Generate JWT token
-                var token = jwtTokenService.GenerateToken(user.Id, user.Email, user.OrganizationId.ToString());
+                var token = jwtTokenService.GenerateToken(user.Id, user.Email!, user.OrganizationId.ToString()!);
 
                 return TypedResults.Ok(new AccessTokenResponse
                 {

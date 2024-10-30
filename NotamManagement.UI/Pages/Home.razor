@@ -20,7 +20,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await HttpClient.GetAsync("/api/notam/id/100");
+       
         
         var notams = await NotamService.GetAllNotamsAsync();
 

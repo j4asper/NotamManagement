@@ -63,7 +63,7 @@ namespace NotamManagement.Core.Services
                                 "OrganizationId" => "organizationid",  // Custom claim type for organization ID
                                 _ => kvp.Key
                             };
-                            claims.Add(new Claim(claimType, kvp.Value.ToString()));
+                            claims.Add(new Claim(claimType, kvp.Value.ToString()!));
                         }
                     }
                 }
