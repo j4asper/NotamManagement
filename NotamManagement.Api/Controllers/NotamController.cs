@@ -28,6 +28,15 @@ public class NotamController : ControllerBase
       
     }
     
+    [HttpGet("Unhandled/{organizationId:int}")]
+    [ProducesResponseType<Notam>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IReadOnlyList<Notam>>> GetNotamsByOrganizationIdAsync(int organizationId, CancellationToken cancellationToken = default)
+    {
+        var notams = await _notamRepository.GetAllUnhandledAsync(organizationId);
+        return notams == null ? NotFound() : notams.ToList();
+    }
+    
     [HttpDelete("Id/{notamId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

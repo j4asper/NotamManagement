@@ -23,6 +23,8 @@ namespace NotamManagement.Core.Repository
         // Add a new entity
         Task AddAsync(T entity);
 
+        Task<IReadOnlyList<T>> GetAllUnhandledAsync(int organizationId);
+
         // Add multiple entities
         Task AddRangeAsync(IEnumerable<T> entities);
 
