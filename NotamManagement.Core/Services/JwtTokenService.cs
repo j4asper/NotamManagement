@@ -24,7 +24,7 @@ namespace NotamManagement.Core.Services
             var audience = _configuration["Jwt:Audience"];
             var expirationMinutes = 30;
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             // Define claims
@@ -58,7 +58,7 @@ namespace NotamManagement.Core.Services
             var issuer = _configuration["JwtSettings:Issuer"];
             var audience = _configuration["JwtSettings:Audience"];
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
             var tokenHandler = new JwtSecurityTokenHandler();
 
             try

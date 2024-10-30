@@ -10,29 +10,29 @@
 
 <h3>Register</h3>
 
-<EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+<MudForm Model="registerModel" OnValidSubmit="HandleRegister">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div>
-        <InputText @bind-Value="registerModel.Email" placeholder="Email" />
-        <InputText @bind-Value="registerModel.Password" placeholder="Password" type="password" />
-        <InputText @bind-Value="registerModel.ConfirmPassword" placeholder="Confirm Password" type="password" />
-        <InputText @bind-Value="registerModel.FirstName" placeholder="First Name" />
-        <InputText @bind-Value="registerModel.LastName" placeholder="Last Name" />
-        <button type="submit">Register</button>
+        <MudInput @bind-Value="registerModel.Email" Placeholder="Email" Required="true"/>
+        <MudInput @bind-Value="registerModel.Password" placeholder="Password" type="password" Required="true" />
+        <MudInput @bind-Value="confirmPass" placeholder="Confirm Password" type="password" Required="true" />
+        <MudInput @bind-Value="registerModel.FullName" placeholder="Full Name" Required="true" />
+        <MudButton type="submit">Register</MudButton>
     </div>
     <label>@errorMessage</label>
-</EditForm>
+</MudForm>
 
 @code {
     private RegisterDTO registerModel = new();
-    private string errorMessage;
+    private string? errorMessage;
+    private string? confirmPass;
 
     private async Task HandleRegister()
     {
         try
         {
-            if (registerModel.Password != registerModel.ConfirmPassword)
+            if (registerModel.Password != confirmPass)
             {
                 throw new Exception("Passwords do not match");
             }

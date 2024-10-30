@@ -25,7 +25,7 @@ namespace NotamManagement.Api.Helper
             // Add custom claims based on properties in ApplicationUser
             if (!string.IsNullOrEmpty(user.OrganizationId.ToString()))
             {
-                identity.AddClaim(new Claim("OrganizationId", user.OrganizationId.ToString()));
+                identity.AddClaim(new Claim("OrganizationId", user.OrganizationId.ToString()!));
             }
 
 
