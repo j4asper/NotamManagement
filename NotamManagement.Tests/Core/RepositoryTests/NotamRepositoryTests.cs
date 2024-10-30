@@ -115,4 +115,32 @@ public class NotamRepositoryTests
         var result = await repository.GetByIdAsync(notam.Id);
         Assert.Equal("Updated Notam Text", result.NotamText);
     }
+
+    [Fact]
+    public async Task GetUnhandledNotams_ShouldReturn1Notam()
+    {
+        context.NotamActions.AddRange(NotamActionHelper.GetTestData());
+        await context.SaveChangesAsync();
+        var repository = new NotamRepository(context);
+  
+
+        // Arrange
+        foreach (var notam in notams)
+        {
+            await repository.AddAsync(notam);
+        }
+     
+
+
+        // Act
+        var result = await repository.GetAllUnhandledAsync(1);
+
+        // Assert
+
+        Assert.Equal(1, result.Count);
+    }
+   
+
+
+
 }

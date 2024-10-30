@@ -8,7 +8,7 @@ public static class DatabaseHelper
     public static NotamManagementContext GetInMemoryDbContext()
     {
         var options = new DbContextOptionsBuilder<NotamManagementContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).EnableSensitiveDataLogging()
             .Options;
 
         return new NotamManagementContext(options);
