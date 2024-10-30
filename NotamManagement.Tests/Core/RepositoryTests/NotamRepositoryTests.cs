@@ -47,7 +47,7 @@ public class NotamRepositoryTests
     }
     
     [Fact]
-    public async Task GetNotamById_ShouldReturnNull_WhenNotFound()
+    public async Task GetNotamById_ShouldReturnNotam()
     {
         var repository = new NotamRepository(context);
         
