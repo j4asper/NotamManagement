@@ -41,9 +41,14 @@ namespace NotamManagement.Core.Repository
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public async Task<IReadOnlyList<NotamAction>> GetAllAsync()
+        public async Task<IReadOnlyList<NotamAction>> GetAllAsync(int? organizationId)
         {
-            return await _dbSet.ToListAsync();
+            if(organizationId.HasValue)
+            {
+                return await _dbSet.Where(x => x.OrganizationId == organizationId).ToListAsync();
+            }
+            return [];
+            
         }
 
         public async Task<NotamAction?> GetByIdAsync(int id)

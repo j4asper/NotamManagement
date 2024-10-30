@@ -87,7 +87,7 @@ public class NotamControllerTests
     public async Task GetAllNotamsAsync_ReturnsListOfNotams()
     {
         // Arrange
-        mockRepository.Setup(repo => repo.GetAllAsync())
+        mockRepository.Setup(repo => repo.GetAllAsync(null))
             .ReturnsAsync(notams); // Return the predefined list
 
         // Act

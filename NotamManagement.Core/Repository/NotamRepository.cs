@@ -23,7 +23,7 @@ namespace NotamManagement.Core.Repository
             return await _dbSet.Include(n => n.Coordinates).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IReadOnlyList<Notam>> GetAllAsync()
+        public async Task<IReadOnlyList<Notam>> GetAllAsync(int? organizationId = null)
         {
             return await _dbSet.Include(n => n.Coordinates).ToListAsync();
         }

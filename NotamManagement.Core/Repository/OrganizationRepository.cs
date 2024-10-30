@@ -42,7 +42,7 @@ namespace NotamManagement.Core.Repository
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public async Task<IReadOnlyList<Organization>> GetAllAsync()
+        public async Task<IReadOnlyList<Organization>> GetAllAsync(int? organizationId = null)
         {
           return await _dbSet.ToListAsync();
         }
