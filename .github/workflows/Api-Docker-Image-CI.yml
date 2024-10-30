@@ -1,12 +1,13 @@
 name: Api Docker Image CI
 
 on:
-  push:
-    branches:
-      - 'main'
-    paths:
-      - NotamManagement.Api/**
-      - NotamManagement.Core/**
+  workflow_dispatch
+#  push:
+#    branches:
+#      - 'main'
+#    paths:
+#      - NotamManagement.Api/**
+#      - NotamManagement.Core/**
 
 jobs:
   build:

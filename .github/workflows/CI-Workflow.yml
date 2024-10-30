@@ -1,0 +1,52 @@
+﻿name: CI Workflow
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - NotamManagement.Api/**
+      - NotamManagement.Core/**
+      - NotamManagement.UI/**
+      - NotamManagement.Tests/**
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+  ui_docker_build:
+    runs-on: ubuntu-latest
+    needs: unit_tests
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to Registry
+        run: echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.jazper.dk --username ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+      - name: Build the UI Docker image
+        run: docker build -f ./UI.Dockerfile -t registry.jazper.dk/notam-management-ui:latest .
+      - name: Push to Registry
+        run: docker push registry.jazper.dk/notam-management-ui:latest
+
+  api_docker_build:
+    runs-on: ubuntu-latest
+    needs: unit_tests
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to Registry
+        run: echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.jazper.dk --username ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+      - name: Build the API Docker image
+        run: docker build -f ./Api.Dockerfile -t registry.jazper.dk/notam-management-api:latest .
+      - name: Push to Registry
+        run: docker push registry.jazper.dk/notam-management-api:latest
