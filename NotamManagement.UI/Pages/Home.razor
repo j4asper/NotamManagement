@@ -22,12 +22,48 @@
 
     protected override async Task OnInitializedAsync()
     {
-       
         var notamActions = await notamActionService.GetAllNotamActionsAsync();
-        var notams = await NotamService.GetAllNotamsAsync();
         NotamActions = notamActions.ToList();
-        Notams = notams.ToList();
         
-        
+        await GetAllNotams();
+    }
+
+    private async Task GetAllNotams()
+    {
+        StateHasChanged();
+
+        try
+        {
+            var enumerableTask = NotamService.GetAllNotamsAsAsyncEnumerable();
+
+            List<Notam> notamResults = [];
+            Notams = notamResults;
+            
+            StateHasChanged();
+
+            var i = 0;
+
+            await foreach (var item in enumerableTask)
+            {
+                notamResults.Add(item);
+                i++;
+
+                if (i > 50)
+                {
+                    i = 0;
+                    StateHasChanged();
+
+                    await Task.Delay(10);
+                }
+            }
+        }
+        catch
+        {
+            Notams = [];
+        }
+        finally
+        {
+            StateHasChanged();
+        }
     }
 }
