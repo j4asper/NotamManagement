@@ -35,6 +35,11 @@ namespace NotamManagement.Core.Repository
             throw new NotImplementedException();
         }
 
+        public IAsyncEnumerable<Airport> GetAllAsAsyncEnumerable(int? organizationId = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IReadOnlyList<Airport>> FindAsync(Expression<Func<Airport, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();

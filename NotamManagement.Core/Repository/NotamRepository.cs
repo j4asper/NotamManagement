@@ -28,6 +28,11 @@ namespace NotamManagement.Core.Repository
             return await _dbSet.Include(n => n.Coordinates).ToListAsync();
         }
 
+        public IAsyncEnumerable<Notam> GetAllAsAsyncEnumerable(int? organizationId = null)
+        {
+            return _dbSet.Include(n => n.Coordinates).AsAsyncEnumerable();
+        }
+
 
         public async Task<IReadOnlyList<Notam>> GetAllUnhandledAsync(int organizationId)
         {

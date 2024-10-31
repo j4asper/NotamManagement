@@ -37,6 +37,11 @@ namespace NotamManagement.Core.Repository
             await _context.SaveChangesAsync();
         }
 
+        public IAsyncEnumerable<Organization> GetAllAsAsyncEnumerable(int? organizationId = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IReadOnlyList<Organization>> FindAsync(Expression<Func<Organization, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();

@@ -36,6 +36,11 @@ namespace NotamManagement.Core.Repository
             await _context.SaveChangesAsync();
         }
 
+        public IAsyncEnumerable<FlightPlan> GetAllAsAsyncEnumerable(int? organizationId = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IReadOnlyList<FlightPlan>> FindAsync(Expression<Func<FlightPlan, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();

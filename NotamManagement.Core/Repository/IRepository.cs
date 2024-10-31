@@ -10,8 +10,10 @@ namespace NotamManagement.Core.Repository
         Task<T?> GetByIdAsync(int id);
 
         // Get all entities
-        Task<IReadOnlyList<T>> GetAllAsync(int? organizationId =null);
+        Task<IReadOnlyList<T>> GetAllAsync(int? organizationId = null);
 
+        IAsyncEnumerable<T> GetAllAsAsyncEnumerable(int? organizationId = null);
+        
         // Find entities based on criteria
         Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate);
 
