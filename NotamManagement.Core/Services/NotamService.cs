@@ -1,19 +1,15 @@
 using System.Net.Http.Json;
-using Microsoft.Extensions.Configuration;
 using NotamManagement.Core.Models;
 
 namespace NotamManagement.Core.Services;
 
 public class NotamService : INotamService
 {
-    private readonly IConfiguration config;
     private readonly HttpClient httpClient;
-
-    public NotamService(IConfiguration config)
+    
+    public NotamService(HttpClient httpClient)
     {
-        this.config = config;
-        httpClient = new HttpClient();
-        httpClient.BaseAddress = new Uri(config.GetRequiredSection("ApiBaseUrl").Value ?? "");
+        this.httpClient = httpClient;
     }
     
     
