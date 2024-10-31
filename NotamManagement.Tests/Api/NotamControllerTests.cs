@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NotamManagement.Api.Controllers;
 using NotamManagement.Core.Models;
@@ -12,11 +14,13 @@ public class NotamControllerTests
     private readonly IReadOnlyList<Notam> notams;
     private readonly Mock<IRepository<Notam>> mockRepository;
     private readonly NotamController controller;
+    private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
 
     public NotamControllerTests()
     {
         mockRepository = new Mock<IRepository<Notam>>();
-        controller = new NotamController(mockRepository.Object);
+        mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+        controller = new NotamController(mockRepository.Object, mockHttpContextAccessor.Object);
         notams = NotamHelper.GetTestData();
     }
     
@@ -96,6 +100,25 @@ public class NotamControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var notamList = okResult.Value as IReadOnlyList<Notam>;
+        Assert.NotNull(notamList);
+        Assert.Equal(notams.Count, notamList.Count);
+    }
+    
+    [Fact]
+    public async Task GetAllNotamsAsAsyncEnumerable_ReturnsAsyncEnumerableOfNotams()
+    {
+        // Arrange
+        var organizationClaim = new Claim("OrganizationId", "1");
+        mockHttpContextAccessor.Setup(x => x.HttpContext.User.FindFirst("OrganizationId"))
+            .Returns(organizationClaim);
+        mockRepository.Setup(repo => repo.GetAllAsAsyncEnumerable(1))
+            .Returns(notams.ToAsyncEnumerable()); // Return the predefined list
+        
+        // Act
+        var result = await controller.GetAllNotamsAsAsyncEnumerable().ToListAsync();
+
+        // Assert
+        var notamList = result as IReadOnlyList<Notam>;
         Assert.NotNull(notamList);
         Assert.Equal(notams.Count, notamList.Count);
     }
