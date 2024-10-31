@@ -11,10 +11,12 @@ namespace NotamManagement.Api.Controllers;
 public class NotamController : ControllerBase
 {
     private readonly IRepository<Notam> _notamRepository;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public NotamController(IRepository<Notam> notamRepository)
+    public NotamController(IRepository<Notam> notamRepository, IHttpContextAccessor httpContextAccessor)
     {
         _notamRepository = notamRepository;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [Authorize]
@@ -54,6 +56,17 @@ public class NotamController : ControllerBase
         var notams = await _notamRepository.GetAllAsync();
         
         return Ok(notams);
+    }
+    
+    [HttpGet("Stream")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async IAsyncEnumerable<Notam> GetAllNotamsAsAsyncEnumerable(CancellationToken cancellationToken = default)
+    {
+        int.TryParse(_httpContextAccessor.HttpContext?.User.FindFirst("OrganizationId")?.Value, out var orgId);
+        
+        await foreach (var item in _notamRepository.GetAllAsAsyncEnumerable(orgId))
+            yield return item;
     }
     
     [HttpPost]

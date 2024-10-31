@@ -21,4 +21,19 @@ public class NotamService : INotamService
         
         return notams ?? [];
     }
+
+    public async IAsyncEnumerable<Notam> GetAllNotamsAsAsyncEnumerable()
+    {
+        var response = await httpClient.GetAsync("/api/notam/Stream");
+        
+        response.EnsureSuccessStatusCode();
+        
+        await foreach(var notam in response.Content.ReadFromJsonAsAsyncEnumerable<Notam>())
+        {
+            if (notam is null)
+                continue;
+
+            yield return notam;
+        }
+    }
 }
