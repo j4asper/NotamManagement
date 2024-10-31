@@ -13,14 +13,11 @@ namespace NotamManagement.Core.Services
     public class NotamActionService : INotamActionService
     {
 
-        private readonly IConfiguration config;
         private readonly HttpClient httpClient;
 
-        public NotamActionService(IConfiguration config)
+        public NotamActionService(HttpClient httpClient)
         {
-            this.config = config;
-            httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(config.GetRequiredSection("ApiBaseUrl").Value ?? "");
+            this.httpClient = httpClient;
         }
         public async Task AddAsync(NotamAction notamAction)
         {
@@ -33,7 +30,7 @@ namespace NotamManagement.Core.Services
         {
             var response = await httpClient.GetAsync("/api/notamaction");
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<IReadOnlyList<NotamAction>>();
+            return await response.Content.ReadFromJsonAsync<IReadOnlyList<NotamAction>>() ?? [];
         }
     }
 }
