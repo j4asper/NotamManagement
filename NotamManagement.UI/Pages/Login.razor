@@ -6,6 +6,7 @@
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject ApiAuthenticationStateProvider AuthStateProvider
 
+<div class="d-flex justify-center">
 <MudPaper Class="pa-4" Width="400px">
     <MudText Class="mb-2" Typo="Typo.h4">Login</MudText>
     <MudForm Class="gap-2" Model="@loginModel">
@@ -15,6 +16,7 @@
         <MudButton OnClick="@HandleLogin" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
     </MudForm>
 </MudPaper>
+</div>
 
 @code {
     private LoginModel loginModel = new();
