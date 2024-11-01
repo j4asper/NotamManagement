@@ -1,5 +1,8 @@
 ﻿@page "/"
 @attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using System.Net.Http.Headers
+
 
 
 <PageTitle>Home</PageTitle>
@@ -15,12 +18,17 @@
     [Inject] public INotamService NotamService { get; set; } = null!;
     [Inject] public HttpClient HttpClient { get; set; } = null!;
     [Inject] public INotamActionService notamActionService { get; set; } = null!;
+    [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
     
     private List<Notam> Notams = [];
     private List<NotamAction> NotamActions = [];
 
     protected override async Task OnInitializedAsync()
     {
+        var token = await LocalStorage.GetItemAsync<string>("jwt_token");
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+       
+        
         var notamActions = await notamActionService.GetAllNotamActionsAsync();
         NotamActions = notamActions.ToList();
         

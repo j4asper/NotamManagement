@@ -22,7 +22,7 @@ namespace NotamManagement.Core.Services
             var secretKey = _configuration["Jwt:Key"];
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
-            var expirationMinutes = 30;
+            var expirationMinutes = 60;
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -54,9 +54,9 @@ namespace NotamManagement.Core.Services
 
         public ClaimsPrincipal? ValidateToken(string token)
         {
-            var secretKey = _configuration["JwtSettings:SecretKey"];
-            var issuer = _configuration["JwtSettings:Issuer"];
-            var audience = _configuration["JwtSettings:Audience"];
+            var secretKey = _configuration["Jwt:Key"];
+            var issuer = _configuration["Jwt:Issuer"];
+            var audience = _configuration["Jwt:Audience"];
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -43,6 +43,8 @@ public class Program
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
                 Scheme = "Bearer"
+                
+                
             });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
