@@ -1,4 +1,5 @@
 ﻿@page "/Flightlist"
+@attribute [Authorize]
 
 <MudDataGrid MultiSelection="true" Items="@FlightPlans" Filterable="true" Groupable="true" GroupExpanded="false">
     <ToolBarContent>
