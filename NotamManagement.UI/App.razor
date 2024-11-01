@@ -3,7 +3,7 @@
 
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)"/>
         </Found>
         <NotFound>
             <PageTitle>Not found</PageTitle>
@@ -13,3 +13,20 @@
         </NotFound>
     </Router>
 </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+
+@code {
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            if (authState.User.Identity is { IsAuthenticated: false })
+            {
+                NavigationManager.NavigateTo("/login");
+            }
+        }
+    }
+}
