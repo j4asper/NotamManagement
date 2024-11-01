@@ -64,6 +64,21 @@ public class AirportRepositoryTests
     }
 
     [Fact]
+    public async Task GetAllAirports_ShouldReturnAllAirports()
+    {
+        var repository = new AirportRepository(context);
+        
+        // Arrange
+        await repository.AddAsync(airports[0]);
+        
+        // Act
+        var result = await repository.GetAllAsync(null); // ID that doesn't exist
+
+        // Assert
+        Assert.Equal(1, result.Count);
+    }
+    
+    [Fact]
     public async Task RemoveAsync_ShouldRemoveAirport()
     {
         var repository = new AirportRepository(context);

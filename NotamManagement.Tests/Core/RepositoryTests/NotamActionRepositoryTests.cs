@@ -64,6 +64,21 @@ public class NotamActionRepositoryTests
     }
 
     [Fact]
+    public async Task GetAllNotamActions_ShouldReturnAllNotamActions()
+    {
+        var repository = new NotamActionRepository(context);
+        
+        // Arrange
+        await repository.AddRangeAsync(notamActions);
+        
+        // Act
+        var result = await repository.GetAllAsync(null); // ID that doesn't exist
+
+        // Assert
+        Assert.Equal(notamActions.Count, result.Count);
+    }
+    
+    [Fact]
     public async Task RemoveAsync_ShouldRemoveNotamAction()
     {
         var repository = new NotamActionRepository(context);

@@ -62,7 +62,22 @@ public class FlightPlanRepositoryTests
         // Assert
         Assert.Equal(flightPlan.Id, result.Id);
     }
+    
+    [Fact]
+    public async Task GetAllFlightPlans_ShouldReturnAllFlightPlans()
+    {
+        var repository = new FlightPlanRepository(context);
+        
+        // Arrange
+        await repository.AddAsync(flightPlans[0]);
+        
+        // Act
+        var result = await repository.GetAllAsync(null); // ID that doesn't exist
 
+        // Assert
+        Assert.Equal(1, result.Count);
+    }
+    
     [Fact]
     public async Task RemoveAsync_ShouldRemoveFlightPlan()
     {
