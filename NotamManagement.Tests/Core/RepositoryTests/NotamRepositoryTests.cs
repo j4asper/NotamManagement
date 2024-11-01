@@ -72,12 +72,27 @@ public class NotamRepositoryTests
         await repository.AddRangeAsync(notams);
         
         // Act
-        var result = await repository.GetAllAsync(); // ID that doesn't exist
+        var result = await repository.GetAllAsync();
 
         // Assert
         Assert.Equal(notams.Count, result.Count);
     }
 
+    [Fact]
+    public async Task GetAllNotamsAsAsyncEnumerable_ShouldReturnAllNotams()
+    {
+        var repository = new NotamRepository(context);
+        
+        // Arrange
+        await repository.AddRangeAsync(notams);
+        
+        // Act
+        var result = await repository.GetAllAsAsyncEnumerable().ToListAsync();
+
+        // Assert
+        Assert.Equal(notams.Count, result.Count);
+    }
+    
     [Fact]
     public async Task RemoveAsync_ShouldRemoveNotam()
     {
