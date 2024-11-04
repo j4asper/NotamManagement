@@ -34,6 +34,54 @@ namespace NotamManagement.Core.Repository
         }
 
 
+        public async IAsyncEnumerable<Notam> GetAllUnhandledAsAsyncEnumerable(int organizationId)
+        {
+            // Step 1: Start with identifiers of canceled Notams
+            var excludedReferenceIds = await _dbSet
+                .Where(n => n.Type == NotamType.Cancellation)
+                .Select(n => n.ReferenceIdentifier)
+                .ToListAsync();
+
+            // Step 2: Recursively expand the exclusion list for any Notams that have a ReferenceIdentifier in excludedReferenceIds
+            bool newReferencesFound;
+            do
+            {
+                // Find Notams that reference any identifier in the current exclusion list
+                var newReferences = await _dbSet
+                    .Where(n => n.ReferenceIdentifier != null // Only Notams with a reference
+                                && excludedReferenceIds.Contains(n.ReferenceIdentifier) // Referencing an excluded Identifier
+                                && !excludedReferenceIds.Contains(n.Identifier)) // Not already in the excluded list
+                    .Select(n => n.Identifier)
+                    .ToListAsync();
+
+                newReferencesFound = newReferences.Any();
+                excludedReferenceIds.AddRange(newReferences); // Add any newly found references
+
+            } while (newReferencesFound);
+
+            var newrefs = await _dbSet.Where(n => n.ReferenceIdentifier == null&&excludedReferenceIds.Contains(n.Identifier)).Select(n => n.Identifier).ToListAsync();
+            excludedReferenceIds.AddRange(newrefs);
+            // Step 3: Exclude any Notam that is canceled or references a canceled identifier
+            var notams = _dbSet
+                .Include(n => n.Coordinates)
+                .Where(n => n.Type != NotamType.Cancellation // Exclude Notams of type Cancellation
+                            && (!excludedReferenceIds.Contains(n.Identifier))) // Exclude in the reference chain
+                .GroupJoin(_context.NotamActions.Where(na => na.OrganizationId == organizationId),
+                    notam => notam.Id,
+                    action => action.NotamId,
+                    (notam, actions) => new { Notam = notam, Actions = actions })
+                .SelectMany(
+                    x => x.Actions.DefaultIfEmpty(),
+                    (x, action) => new { x.Notam, Action = action })
+                .Where(x => x.Action == null) // Only unhandled Notams
+                .Select(x => x.Notam);
+            
+            await foreach (var notam in notams.AsAsyncEnumerable())
+            {
+                yield return notam;
+            }
+        }
+
         public async Task<IReadOnlyList<Notam>> GetAllUnhandledAsync(int organizationId)
         {
             // Step 1: Start with identifiers of canceled Notams
@@ -77,11 +125,6 @@ namespace NotamManagement.Core.Repository
                 .Select(x => x.Notam)
                 .ToListAsync();
         }
-
-
-
-
-
 
         public async Task<IReadOnlyList<Notam>> FindAsync(Expression<Func<Notam, bool>> predicate)
 
