@@ -10,12 +10,13 @@
     }
     else
     {
-        <MudText><b>@Notam.Identifier</b></MudText>
+        <MudText Align="Align.Left"><b>@Notam.Identifier</b></MudText>
     }
-    <MudText><b>Type:</b> @Notam.Type</MudText>
-    <MudText><b>NOF:</b> @Notam.NotamOffice</MudText>
-    <MudText><b>Valid To:</b> @Notam.ValidFrom</MudText>
-    <MudText><b>Valid To:</b> @(Notam.IsPermanent ? "Permanent" : Notam.ValidTo)</MudText>
+    <MudText Align="Align.Left"><b>Type:</b> @Notam.Type</MudText>
+    <MudText Align="Align.Left"><b>NOF:</b> @Notam.NotamOffice</MudText>
+    <MudText Align="Align.Left"><b>Valid To:</b> @Notam.ValidFrom</MudText>
+    <MudText Align="Align.Left"><b>Valid To:</b> @(Notam.IsPermanent ? "Permanent" : Notam.ValidTo)</MudText>
+    <MudSpacer/>
     <MudButton Style="width: 200px;" OnClick="OpenNotamActionCreateDialog" Color="Color.Primary" Variant="Variant.Filled">Do something</MudButton>
 </MudCard>
 
