@@ -10,5 +10,5 @@ public class NotamAction
     
     public Importance Importance { get; set; }
     
-    public required string Note { get; set; }
+    public string? Note { get; set; }
 }
