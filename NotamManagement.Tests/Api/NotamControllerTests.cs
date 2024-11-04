@@ -111,7 +111,7 @@ public class NotamControllerTests
         var organizationClaim = new Claim("OrganizationId", "1");
         mockHttpContextAccessor.Setup(x => x.HttpContext.User.FindFirst("OrganizationId"))
             .Returns(organizationClaim);
-        mockRepository.Setup(repo => repo.GetAllAsAsyncEnumerable(1))
+        mockRepository.Setup(repo => repo.GetAllUnhandledAsAsyncEnumerable(1))
             .Returns(notams.ToAsyncEnumerable()); // Return the predefined list
         
         // Act
