@@ -2,7 +2,7 @@
 <MudCard Elevation="0" Class="mb-2 ma-4 border-solid border-2 mud-border-primary pa-2" Style="width: 500px; height: 250px;">
     @if (Notam.ReferenceIdentifier is not null)
     {
-        <MudStack Row="true">
+        <MudStack Class="mb-2" Row="true">
             <MudText><b>@Notam.Identifier</b></MudText>
             <MudSpacer />
             <MudText><b>@Notam.ReferenceIdentifier</b></MudText>
@@ -10,7 +10,7 @@
     }
     else
     {
-        <MudText Align="Align.Left"><b>@Notam.Identifier</b></MudText>
+        <MudText Class="mb-2" Align="Align.Left"><b>@Notam.Identifier</b></MudText>
     }
     <MudText Align="Align.Left"><b>Type:</b> @Notam.Type</MudText>
     <MudText Align="Align.Left"><b>NOF:</b> @Notam.NotamOffice</MudText>
@@ -22,14 +22,14 @@
 
 @code {
     [Inject] public IDialogService DialogService { get; set; } = null!;
-
+    [Inject] public NavigationManager NavigationManager { get; set; } = null!;
+    
     [EditorRequired][Parameter] public Notam Notam { get; set; } = null!;
-    [EditorRequired][Parameter] public NotamAction notamAction { get; set; } = null!;
+    private NotamAction notamAction { get; set; } = null!;
 
     [Inject] public ApiAuthenticationStateProvider AuthStateProvider { get; set; }
 
     private async Task OpenNotamActionCreateDialog()
-
     {
 
         // Get the authentication state
@@ -61,7 +61,9 @@
 
         if (result is { Canceled: false })
         {
-            // reload the main page or remove this notam from the unhandled list
+            NavigationManager.NavigateTo("/flightlist");
+            
+            NavigationManager.NavigateTo("/");
         }
     }
 }
