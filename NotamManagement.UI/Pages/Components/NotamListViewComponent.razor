@@ -9,4 +9,6 @@
 
 @code {
     [EditorRequired] [Parameter] public List<Notam> Notams { get; set; } = null!;
+
+    [Parameter] public EventCallback<string> FilterChanged { get; set; }
 }
