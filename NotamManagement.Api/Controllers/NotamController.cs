@@ -65,7 +65,7 @@ public class NotamController : ControllerBase
     {
         int.TryParse(_httpContextAccessor.HttpContext?.User.FindFirst("OrganizationId")?.Value, out var orgId);
         
-        await foreach (var item in _notamRepository.GetAllAsAsyncEnumerable(orgId))
+        await foreach (var item in _notamRepository.GetAllUnhandledAsAsyncEnumerable(orgId))
             yield return item;
     }
     
