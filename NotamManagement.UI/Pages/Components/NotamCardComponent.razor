@@ -4,7 +4,7 @@
     {
         <MudStack Row="true">
             <MudText><b>@Notam.Identifier</b></MudText>
-            <MudSpacer/>
+            <MudSpacer />
             <MudText><b>@Notam.ReferenceIdentifier</b></MudText>
         </MudStack>
     }
@@ -21,12 +21,39 @@
 
 @code {
     [Inject] public IDialogService DialogService { get; set; } = null!;
-    
-    [EditorRequired] [Parameter] public Notam Notam { get; set; } = null!;
-    
+
+    [EditorRequired][Parameter] public Notam Notam { get; set; } = null!;
+    [EditorRequired][Parameter] public NotamAction notamAction { get; set; } = null!;
+
+    [Inject] public ApiAuthenticationStateProvider AuthStateProvider { get; set; }
+
     private async Task OpenNotamActionCreateDialog()
+
     {
-        var parameters = new DialogParameters<NotamActionCreateDialog> { { x => x.Notam, Notam } };
+
+        // Get the authentication state
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Retrieve the OrganizationId claim
+        var organizationIdClaim = user.FindFirst("OrganizationId");
+        if (organizationIdClaim != null)
+        {
+            notamAction = new NotamAction()
+                {
+                    NotamId = Notam.Id,
+                    OrganizationId = int.Parse(organizationIdClaim.Value)
+
+                };
+
+
+        }
+        else
+        {
+            throw new Exception("OrganizationId claim not found");
+        }
+
+        var parameters = new DialogParameters<NotamActionCreateDialog> { { x => x.Notam, Notam }, { x => x.NotamAction, notamAction } };
 
         var dialog = await DialogService.ShowAsync<NotamActionCreateDialog>("Do something to this notam", parameters);
         var result = await dialog.Result;

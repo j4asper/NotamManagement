@@ -33,10 +33,10 @@
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
 
     [Inject] public INotamActionService NotamActionService { get; set; } = null!;
-    
+
     [EditorRequired] [Parameter] public Notam Notam { get; set; } = null!;
 
-    private NotamAction? NotamAction { get; set; }
+    [EditorRequired] [Parameter] public NotamAction NotamAction { get; set; } = null!;
 
     private void Cancel() => MudDialog.Cancel();
 
@@ -47,7 +47,6 @@
             return;
         }
         // Save new notam action with NotamActionService
-        NotamAction.NotamId = Notam.Id;
         NotamActionService.AddAsync(NotamAction);
         Snackbar.Add("Notam Action Created!", Severity.Success);
         MudDialog.Close(DialogResult.Ok(Notam));
