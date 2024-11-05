@@ -26,11 +26,19 @@
 </MudDataGrid>
 
 @code {
+    [Inject] public FlightPlanService FlightPlanService { get; set; } = null!;
+    
     List<FlightPlan> FlightPlans = [];
 
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(0);
+
+        // var result = await FlightPlanService.GetAllAsync();
+        //
+        // FlightPlans = result.ToList();
+        
+        
         FlightPlans.Add(new FlightPlan
         {
             Id = 1,
