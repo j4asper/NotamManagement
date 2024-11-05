@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NotamManagement.Core.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NotamManagement.Core.Migrations
 {
     [DbContext(typeof(NotamManagementContext))]
-    partial class NotamManagementContextModelSnapshot : ModelSnapshot
+    [Migration("20241105103959_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace NotamManagement.Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("AirportFlightPlan", b =>
-                {
-                    b.Property<int>("AirportsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("FlightPlansId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("AirportsId", "FlightPlansId");
-
-                    b.HasIndex("FlightPlansId");
-
-                    b.ToTable("AirportFlightPlan");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -181,11 +169,16 @@ namespace NotamManagement.Core.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("FlightPlanId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ICAO")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FlightPlanId");
 
                     b.ToTable("Airports");
                 });
@@ -424,21 +417,6 @@ namespace NotamManagement.Core.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("AirportFlightPlan", b =>
-                {
-                    b.HasOne("NotamManagement.Core.Models.Airport", null)
-                        .WithMany()
-                        .HasForeignKey("AirportsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NotamManagement.Core.Models.FlightPlan", null)
-                        .WithMany()
-                        .HasForeignKey("FlightPlansId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -490,6 +468,13 @@ namespace NotamManagement.Core.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("NotamManagement.Core.Models.Airport", b =>
+                {
+                    b.HasOne("NotamManagement.Core.Models.FlightPlan", null)
+                        .WithMany("Airports")
+                        .HasForeignKey("FlightPlanId");
+                });
+
             modelBuilder.Entity("NotamManagement.Core.Models.Coordinates", b =>
                 {
                     b.HasOne("NotamManagement.Core.Models.Notam", null)
@@ -520,6 +505,11 @@ namespace NotamManagement.Core.Migrations
                     b.HasOne("NotamManagement.Core.Models.Organization", null)
                         .WithMany("Users")
                         .HasForeignKey("OrganizationId");
+                });
+
+            modelBuilder.Entity("NotamManagement.Core.Models.FlightPlan", b =>
+                {
+                    b.Navigation("Airports");
                 });
 
             modelBuilder.Entity("NotamManagement.Core.Models.Notam", b =>

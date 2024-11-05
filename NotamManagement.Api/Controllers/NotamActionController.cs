@@ -70,6 +70,12 @@ public class NotamActionController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<NotamAction>>> GetAllNotamActionsAsync(CancellationToken cancellationToken = default)
     {
         var orgID = _httpContextAccessor.HttpContext.User.FindFirst("OrganizationId").Value;
+
+        if(orgID == null)
+        {
+            return BadRequest();
+        }
+
         var notams = await _notamActionRepository.GetAllAsync(int.Parse(orgID));
         return Ok(notams);
     }

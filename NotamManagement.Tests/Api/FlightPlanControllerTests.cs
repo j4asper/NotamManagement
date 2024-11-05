@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NotamManagement.Api.Controllers;
 using NotamManagement.Core.Models;
 using NotamManagement.Core.Repository;
 using NotamManagement.Tests.Helpers;
+using System.Security.Claims;
 
 namespace NotamManagement.Tests.Api;
 
@@ -11,12 +13,18 @@ public class FlightPlanControllerTests
 {
     private readonly IReadOnlyList<FlightPlan> flightPlans;
     private readonly Mock<IRepository<FlightPlan>> mockRepository;
+    private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
+    private readonly Mock<IRepository<Organization>> mockOrganizationRepository;
+    private readonly Mock<IRepository<Airport>> mockAirportRepository;
     private readonly FlightPlanController controller;
 
     public FlightPlanControllerTests()
     {
         mockRepository = new Mock<IRepository<FlightPlan>>();
-        controller = new FlightPlanController(mockRepository.Object);
+        mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+        mockOrganizationRepository = new Mock<IRepository<Organization>>();
+        mockAirportRepository = new Mock<IRepository<Airport>>();
+        controller = new FlightPlanController(mockRepository.Object, mockHttpContextAccessor.Object,mockOrganizationRepository.Object, mockAirportRepository.Object );
         flightPlans = FlightPlanHelper.GetTestData();
     }
     
@@ -88,8 +96,25 @@ public class FlightPlanControllerTests
     public async Task GetAllFlightPlansAsync_ReturnsListOfFlightPlans()
     {
         // Arrange
+        var organizationClaim = new Claim("OrganizationId", "1");
+        var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[] { organizationClaim }));
+
+        // Mock the HttpContext and User claims
+        var mockHttpContext = new Mock<HttpContext>();
+        mockHttpContext.Setup(x => x.User).Returns(claimsPrincipal);
+        mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(mockHttpContext.Object);
         mockRepository.Setup(repo => repo.GetAllAsync(null))
             .ReturnsAsync(flightPlans); // Return the predefined list
+        var organization = new Organization
+        {
+            Id = 1,
+            Name = "Test Organization",
+            FlightPlans = flightPlans.ToList()
+        };
+
+        // Mock the organization repository to return the organization
+        mockOrganizationRepository.Setup(repo => repo.GetByIdAsync(1))
+            .ReturnsAsync(organization);
 
         // Act
         var result = await controller.GetAllFlightPlansAsync();
@@ -105,15 +130,44 @@ public class FlightPlanControllerTests
     public async Task CreateFlightPlanAsync_ReturnsOk_WhenSuccessful()
     {
         // Arrange
+        // Set up the organization claim
+        var organizationClaim = new Claim("OrganizationId", "1");
+        var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[] { organizationClaim }));
+
+        // Mock the HttpContext and User claims
+        var mockHttpContext = new Mock<HttpContext>();
+        mockHttpContext.Setup(x => x.User).Returns(claimsPrincipal);
+        mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(mockHttpContext.Object);
+
+        // Set up the test flight plan
         var flightPlan = flightPlans[0];
-        
-        mockRepository.Setup(repo => repo.AddAsync(flightPlan))
-            .Returns(Task.CompletedTask); // Simulate successful addition
+        var organization = new Organization
+        {
+            Id = 1,
+            Name = "Test Organization",
+            FlightPlans = new List<FlightPlan>()
+        };
+
+        // Mock the organization repository to return the organization
+        mockOrganizationRepository.Setup(repo => repo.GetByIdAsync(1))
+            .ReturnsAsync(organization);
+
+        // Mock the airport repository to return airports based on flight plan's airport IDs
+        foreach (var airport in flightPlan.Airports)
+        {
+            mockAirportRepository.Setup(repo => repo.GetByIdAsync(airport.Id))
+                .ReturnsAsync(airport); // Simulate retrieving each airport
+        }
+
+        // Mock the organization repository's update method
+        mockOrganizationRepository.Setup(repo => repo.UpdateAsync(organization))
+            .Returns(Task.CompletedTask); // Simulate successful update
 
         // Act
         var result = await controller.CreateFlightPlanAsync(flightPlan);
 
         // Assert
-        Assert.IsType<OkObjectResult>(result);
+        Assert.IsType<OkResult>(result);
     }
+
 }

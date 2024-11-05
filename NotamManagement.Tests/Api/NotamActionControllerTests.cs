@@ -13,6 +13,7 @@ public class NotamActionControllerTests
 {
     private readonly IReadOnlyList<NotamAction> notamActions;
     private readonly Mock<IRepository<NotamAction>> mockRepository;
+    private readonly Mock<IRepository<Notam>> mockNotamRepository;
     private readonly NotamActionController controller;
     private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
 
@@ -20,7 +21,8 @@ public class NotamActionControllerTests
     {
         mockRepository = new Mock<IRepository<NotamAction>>();
         mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
-        controller = new NotamActionController(mockRepository.Object,mockHttpContextAccessor.Object);
+        mockNotamRepository = new Mock<IRepository<Notam>>();
+        controller = new NotamActionController(mockRepository.Object,mockHttpContextAccessor.Object,mockNotamRepository.Object);
         notamActions = NotamActionHelper.GetTestData();
     }
     
