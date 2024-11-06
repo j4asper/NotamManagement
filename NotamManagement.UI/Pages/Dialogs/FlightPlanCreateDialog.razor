@@ -1,0 +1,75 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+            Create FlightPlan
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <!-- MudSelect for selecting airports -->
+        <MudSelect T="Airport" MultiSelection="true" Variant="Variant.Outlined" @bind-SelectedValues="selectedairports" >
+            @foreach (Airport item in airports)
+            {
+                <MudSelectItem Value="@item">@item.ICAO</MudSelectItem>
+            }
+        </MudSelect>
+
+        <!-- Display selected airports in a list with drag-and-drop reorder functionality -->
+        <MudList T="Airport" Class="mt-3">
+            <MudListSubheader>Selected Airports</MudListSubheader>
+            @foreach (var airport in selectedairports)
+            {
+                <MudListItem T="Airport">
+                    <MudText>@airport.ICAO</MudText>
+                </MudListItem>
+            }
+            
+        </MudList>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="Save">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Inject] public IAirportService AirportService { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    [Inject] public IFlightPlanService FlightPlanService { get; set; } = null!;
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
+
+    private IEnumerable<Airport> selectedairports = new HashSet<Airport>();
+    private List<Airport> airports = new List<Airport>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        MudDialog.Options.CloseOnEscapeKey = true;
+        MudDialog.Options.BackdropClick = false;
+
+        // Fetch all airports to show in the MudSelect
+        var result = await AirportService.GetAllAsync();
+        airports = result.ToList();
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void Save()
+    {
+        if (selectedairports.Count() == 0)
+        {
+            Snackbar.Add("No airports selected!", Severity.Warning);
+            return;
+        }
+
+        // Save new flight plan with selected airports in the order they were selected
+        var flightPlan = new FlightPlan()
+        {
+            Airports = selectedairports.ToList()
+        };
+
+        FlightPlanService.AddAsync(flightPlan);
+        Snackbar.Add("FlightPlan Created!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(flightPlan));
+    }
+}
