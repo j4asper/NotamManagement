@@ -59,7 +59,7 @@ namespace NotamManagement.Core.Repository
 
         public async Task<Organization?> GetByIdAsync(int id)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.Include(x=>x.FlightPlans).ThenInclude(x=>x.Airports).FirstAsync(x=>x.Id == id);
         }
 
         public async Task RemoveAsync(int id)

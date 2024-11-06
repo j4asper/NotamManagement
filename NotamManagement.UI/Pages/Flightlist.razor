@@ -1,4 +1,4 @@
-﻿@page "/Flightlist"
+﻿@page "/flightlist"
 @attribute [Authorize]
 
 <MudDataGrid MultiSelection="true" Items="@FlightPlans" Filterable="true" Groupable="true" GroupExpanded="false">
@@ -21,48 +21,48 @@
             <MudCardContent>
                 <MudText><b>Route:</b> @(string.Join(" \u2192 ", context.Item.Airports.Select(x => x.ICAO)))</MudText>
             </MudCardContent>
-        </MudCard>
+        </MudCard>  
     </ChildRowContent>
 </MudDataGrid>
 
 @code {
-    [Inject] public FlightPlanService FlightPlanService { get; set; } = null!;
+    [Inject] public IFlightPlanService FlightPlanService {get; set; } = null!;
     
     List<FlightPlan> FlightPlans = [];
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(0);
+        
 
-        // var result = await FlightPlanService.GetAllAsync();
-        //
-        // FlightPlans = result.ToList();
+        var result = await FlightPlanService.GetAllAsync();
+        
+        FlightPlans = result.ToList();
         
         
-        FlightPlans.Add(new FlightPlan
-        {
-            Id = 1,
-            Airports = new List<Airport>
-            {
-                new Airport
-                {
-                    Id = 1,
-                    FIR = "EKDK",
-                    ICAO = "EKCH"
-                },
-                new Airport
-                {
-                    Id = 2,
-                    FIR = "EKDK",
-                    ICAO = "EKRK"
-                },
-                new Airport
-                {
-                    Id = 3,
-                    FIR = "EKDK",
-                    ICAO = "EKBI"
-                }
-            }
-        });
+        // FlightPlans.Add(new FlightPlan
+        // {
+        //     Id = 1,
+        //     Airports = new List<Airport>
+        //     {
+        //         new Airport
+        //         {
+        //             Id = 1,
+        //             FIR = "EKDK",
+        //             ICAO = "EKCH"
+        //         },
+        //         new Airport
+        //         {
+        //             Id = 2,
+        //             FIR = "EKDK",
+        //             ICAO = "EKRK"
+        //         },
+        //         new Airport
+        //         {
+        //             Id = 3,
+        //             FIR = "EKDK",
+        //             ICAO = "EKBI"
+        //         }
+        //     }
+        // });
     }
 }
