@@ -21,4 +21,11 @@ public class FlightPlanService : IFlightPlanService
         
         return flightPlans ?? [];
     }
+
+    public async Task AddAsync(FlightPlan flightPlan)
+    {
+        var response = await httpClient.PostAsJsonAsync("/api/flightplan", flightPlan);
+
+        response.EnsureSuccessStatusCode();
+    }
 }

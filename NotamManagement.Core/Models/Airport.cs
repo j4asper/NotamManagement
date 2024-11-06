@@ -12,4 +12,9 @@ public class Airport
 
     [JsonIgnore]
     public List<FlightPlan>? FlightPlans { get; set; }
+
+    public override string ToString()
+    {
+        return ICAO;
+    }
 }
