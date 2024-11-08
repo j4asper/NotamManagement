@@ -33,6 +33,21 @@ public class OrganizationRepositoryTests
         Assert.NotNull(result.First());
         Assert.Equal(organization.Name, result.First().Name);
     }
+    
+    [Fact]
+    public async Task AddOrganizationRange_ShouldAddOrganizations()
+    {
+        var repository = new OrganizationRepository(context);
+        
+        // Arrange
+        await repository.AddRangeAsync([organizations.First()]);
+
+        // Assert
+        var result = await repository.FindAsync(x => x.Id == organizations.First().Id);
+        
+        Assert.NotNull(result.First());
+        Assert.Equal(organizations.First().Name, result.First().Name);
+    }
 
     [Fact]
     public async Task GetOrganization_ShouldReturnNull_WhenNotFound()
@@ -44,6 +59,20 @@ public class OrganizationRepositoryTests
 
         // Assert
         Assert.Empty(result);
+    }
+    
+    [Fact]
+    public async Task GetAllOrganizations_ShouldReturnListOfOrganizations()
+    {
+        var repository = new OrganizationRepository(context);
+        
+        await repository.AddAsync(organizations.First());
+        
+        // Act
+        var result = await repository.GetAllAsync();
+
+        // Assert
+        Assert.Single(result);
     }
     
     [Fact]
@@ -97,6 +126,20 @@ public class OrganizationRepositoryTests
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task RemoveRangeAsync_ShouldRemoveOrganization()
+    {
+        var repository = new OrganizationRepository(context);
+        
+        // Arrange
+        await repository.AddAsync(organizations.First());
+
+        // Act
+        await repository.RemoveRangeAsync([organizations.First()]);
+
+        // Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => repository.GetByIdAsync(organizations.First().Id));
+    }
 
     [Fact]
     public async Task UpdateAsync_ShouldUpdateOrganization()
@@ -114,5 +157,29 @@ public class OrganizationRepositoryTests
         // Assert
         var result = await repository.GetByIdAsync(organization.Id);
         Assert.Equal("HOP", result.Name);
+    }
+
+    [Fact]
+    public async Task GetAllUnhandledAsAsyncEnumerable_ShouldThrowNotImplementedException()
+    {
+        var repository = new OrganizationRepository(context);
+        
+        Assert.Throws<NotImplementedException>(() => repository.GetAllUnhandledAsAsyncEnumerable(0));
+    }
+    
+    [Fact]
+    public async Task GetAllUnhandledAsync_ShouldThrowNotImplementedException()
+    {
+        var repository = new OrganizationRepository(context);
+        
+        await Assert.ThrowsAsync<NotImplementedException>(() => repository.GetAllUnhandledAsync(0));
+    }
+    
+    [Fact]
+    public async Task GetAllAsAsyncEnumerable_ShouldThrowNotImplementedException()
+    {
+        var repository = new OrganizationRepository(context);
+        
+        Assert.Throws<NotImplementedException>(() => repository.GetAllAsAsyncEnumerable(0));
     }
 }
