@@ -84,10 +84,6 @@ public class NotamActionController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> CreateNotamActionAsync(NotamAction notamAction, CancellationToken cancellationToken = default)
     {
-         if(notamAction == null)
-        {
-            return BadRequest();
-        }
         await _notamActionRepository.AddAsync(notamAction);
         return Ok(notamAction);
     }
@@ -95,11 +91,6 @@ public class NotamActionController : ControllerBase
     [HttpGet("find")]
     public async Task<ActionResult<IReadOnlyList<NotamAction>>> FindByLocationAsync([FromQuery] string location)
     {
-        if (string.IsNullOrEmpty(location))
-        {
-            return BadRequest("Location parameter is required.");
-        }
-
         // Fetch all Notams for the given location
         var result = await _notamRepository.FindAsync(x => x.Location == location);
 
