@@ -7,4 +7,5 @@ public interface INotamService
     Task<IReadOnlyList<Notam>> GetAllNotamsAsync();
     
     IAsyncEnumerable<Notam> GetAllNotamsAsAsyncEnumerable();
+    Task<Notam> GetNotamAsync(int notamId);
 }
