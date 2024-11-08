@@ -1,6 +1,7 @@
 ![UI Uptime Badge](https://kuma.uptime-vps.jazper.dk/api/badge/7/uptime/48?labelPrefix=UI+&style=for-the-badge)
 ![API Uptime Badge](https://kuma.uptime-vps.jazper.dk/api/badge/8/uptime/48?labelPrefix=API+&style=for-the-badge)  
 ![Workflow Runs](https://github.com/j4asper/NotamManagement/actions/workflows/CI-Workflow.yml/badge.svg)
+[![codecov](https://codecov.io/gh/j4asper/NotamManagement/graph/badge.svg?token=0ORR80EARI)](https://codecov.io/gh/j4asper/NotamManagement)
 # NotamManagement
 Notam Management Project in collaboration with [AIRSUPPORT A/S](https://ppsflightplanning.com/).
 
