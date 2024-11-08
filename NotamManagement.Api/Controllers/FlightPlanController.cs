@@ -79,7 +79,7 @@ public class FlightPlanController : ControllerBase
         {
             var res = await _airportRepository.GetByIdAsync(item.Id);
             if(res!=null)
-            airports.Add(res);
+                airports.Add(res);
         }
         flightPlan.Airports = airports;
         organization.FlightPlans.Add(flightPlan);
