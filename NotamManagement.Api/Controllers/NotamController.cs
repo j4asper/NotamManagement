@@ -75,6 +75,5 @@ public class NotamController : ControllerBase
     {
         await _notamRepository.AddAsync(notam);
         return Ok();
-
     }
 }

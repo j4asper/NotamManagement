@@ -112,6 +112,21 @@ public class FlightPlanRepositoryTests
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task RemoveRangeAsync_ShouldRemoveFlightPlans()
+    {
+        var repository = new FlightPlanRepository(context);
+        
+        // Arrange
+        await repository.AddAsync(flightPlans.First());
+
+        // Act
+        await repository.RemoveRangeAsync([flightPlans.First()]);
+
+        // Assert
+        var result = await repository.FindAsync(x => x.Id == flightPlans.First().Id);
+        Assert.Empty(result);
+    }
 
     [Fact]
     public async Task UpdateAsync_ShouldUpdateFlightPlan()
@@ -130,5 +145,29 @@ public class FlightPlanRepositoryTests
         // Assert
         var result = await repository.GetByIdAsync(flightPlan.Id);
         Assert.NotEqual(1, result.Airports[0].Id);
+    }
+    
+    [Fact]
+    public async Task GetAllUnhandledAsAsyncEnumerable_ShouldThrowNotImplementedException()
+    {
+        var repository = new FlightPlanRepository(context);
+        
+        Assert.Throws<NotImplementedException>(() => repository.GetAllUnhandledAsAsyncEnumerable(0));
+    }
+    
+    [Fact]
+    public async Task GetAllUnhandledAsync_ShouldThrowNotImplementedException()
+    {
+        var repository = new FlightPlanRepository(context);
+        
+        await Assert.ThrowsAsync<NotImplementedException>(() => repository.GetAllUnhandledAsync(0));
+    }
+    
+    [Fact]
+    public async Task GetAllAsAsyncEnumerable_ShouldThrowNotImplementedException()
+    {
+        var repository = new FlightPlanRepository(context);
+        
+        Assert.Throws<NotImplementedException>(() => repository.GetAllAsAsyncEnumerable(0));
     }
 }

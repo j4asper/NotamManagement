@@ -11,7 +11,7 @@ public class AirportController : ControllerBase
 {
 
     private readonly IRepository<Airport> _airportRepository;
-
+    
     public AirportController(IRepository<Airport> airportRepository)
     {
         _airportRepository = airportRepository;

@@ -129,4 +129,44 @@ public class NotamActionRepositoryTests
         var result = await repository.GetByIdAsync(notamAction.Id);
         Assert.Equal("Updated Note", result.Note);
     }
+    
+    [Fact]
+    public async Task RemoveRangeAsync_ShouldRemoveNotamActions()
+    {
+        var repository = new NotamActionRepository(context);
+        
+        // Arrange
+        await repository.AddAsync(notamActions.First());
+
+        // Act
+        await repository.RemoveRangeAsync([notamActions.First()]);
+
+        // Assert
+        var result = await repository.FindAsync(x => x.Id == notamActions.First().Id);
+        Assert.Empty(result);
+    }
+    
+    [Fact]
+    public async Task GetAllUnhandledAsAsyncEnumerable_ShouldThrowNotImplementedException()
+    {
+        var repository = new NotamActionRepository(context);
+        
+        Assert.Throws<NotImplementedException>(() => repository.GetAllUnhandledAsAsyncEnumerable(0));
+    }
+    
+    [Fact]
+    public async Task GetAllUnhandledAsync_ShouldThrowNotImplementedException()
+    {
+        var repository = new NotamActionRepository(context);
+        
+        await Assert.ThrowsAsync<NotImplementedException>(() => repository.GetAllUnhandledAsync(0));
+    }
+    
+    [Fact]
+    public async Task GetAllAsAsyncEnumerable_ShouldThrowNotImplementedException()
+    {
+        var repository = new NotamActionRepository(context);
+        
+        Assert.Throws<NotImplementedException>(() => repository.GetAllAsAsyncEnumerable(0));
+    }
 }

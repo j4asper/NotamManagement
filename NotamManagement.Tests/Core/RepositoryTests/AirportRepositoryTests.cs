@@ -130,4 +130,52 @@ public class AirportRepositoryTests
         var result = await repository.GetByIdAsync(airport.Id);
         Assert.Equal("TEST", result.ICAO);
     }
+    
+    [Fact]
+    public async Task RemoveRangeAsync_ShouldRemoveAirports()
+    {
+        var repository = new AirportRepository(context);
+        
+        // Arrange
+        await repository.AddAsync(airports.First());
+
+        // Act
+        await repository.RemoveRangeAsync([airports.First()]);
+
+        // Assert
+        var result = await repository.FindAsync(x => x.Id == airports.First().Id);
+        Assert.Empty(result);
+    }
+    
+    [Fact]
+    public async Task GetAllUnhandledAsAsyncEnumerable_ShouldThrowNotImplementedException()
+    {
+        var repository = new AirportRepository(context);
+        
+        Assert.Throws<NotImplementedException>(() => repository.GetAllUnhandledAsAsyncEnumerable(0));
+    }
+    
+    [Fact]
+    public async Task GetAllUnhandledAsync_ShouldThrowNotImplementedException()
+    {
+        var repository = new AirportRepository(context);
+        
+        await Assert.ThrowsAsync<NotImplementedException>(() => repository.GetAllUnhandledAsync(0));
+    }
+    
+    [Fact]
+    public async Task AddRangeAsync_ShouldThrowNotImplementedException()
+    {
+        var repository = new AirportRepository(context);
+        
+        await Assert.ThrowsAsync<NotImplementedException>(() => repository.AddRangeAsync([]));
+    }
+    
+    [Fact]
+    public async Task GetAllAsAsyncEnumerable_ShouldThrowNotImplementedException()
+    {
+        var repository = new AirportRepository(context);
+        
+        Assert.Throws<NotImplementedException>(() => repository.GetAllAsAsyncEnumerable(0));
+    }
 }

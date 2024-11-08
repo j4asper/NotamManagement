@@ -51,4 +51,29 @@ public class FlightPlanServiceTests
         Assert.NotNull(result);
         Assert.Equal(flightPlans.Count, result.Count);
     }
+    
+    [Fact]
+    public async Task AddFlightPlansAsync_EnsureSuccessStatusCodeDoesNotThrowException_WhenResponseIsSuccessful()
+    {
+        // Arrange
+        var jsonResponse = JsonSerializer.Serialize(flightPlans);
+
+        httpMessageHandlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Post && req.RequestUri == new Uri("http://localhost/api/flightplan")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(jsonResponse, Encoding.UTF8, "application/json"),
+            })
+            .Verifiable();
+
+        // Act
+        var exception = await Record.ExceptionAsync(() => flightPlanService.AddAsync(flightPlans.First()));
+
+        Assert.Null(exception);
+    }
 }
