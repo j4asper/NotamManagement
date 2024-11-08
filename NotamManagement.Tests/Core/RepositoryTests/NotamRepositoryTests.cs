@@ -127,6 +127,21 @@ public class NotamRepositoryTests
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task RemoveRangeAsync_ShouldRemoveNotam()
+    {
+        var repository = new NotamRepository(context);
+        
+        // Arrange
+        await repository.AddAsync(notams.First());
+
+        // Act
+        await repository.RemoveRangeAsync([notams.First()]);
+
+        // Assert
+        var result = await repository.FindAsync(x => x.Id == notams.First().Id);
+        Assert.Empty(result);
+    }
 
     [Fact]
     public async Task UpdateAsync_ShouldUpdateNotam()
