@@ -6,6 +6,7 @@
     - "NotamManagement.Core/Models/*"
     - "NotamManagement.Core/Services/ApiAuthenticationStateProvider.cs"
     - "NotamManagement.Core/Services/JwtTokenService.cs"
+    - "NotamManagement.Core/Repository/UserRepository.cs"
     - "NotamManagement.Api/Extensions/*"
     - "NotamManagement.Api/Helper/*"
     - "NotamManagement.Api/Controllers/OrganizationController.cs"
