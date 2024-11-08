@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Linq.Expressions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NotamManagement.Api.Controllers;
@@ -110,32 +111,31 @@ public class NotamActionControllerTests
         Assert.NotNull(notamActionList);
         Assert.Equal(notamActions.Count, notamActionList.Count);
     }
-    //
-    // [Fact]
-    // public async Task GetNotamActionsByLocationAsync_ReturnsListOfNotamActions()
-    // {
-    //     // Arrange
-    //     var notamList = notams.Take(2).ToList();
-    //     var notamIds = notamList.Select(n => n.Id).ToList();
-    //     var _notamActionList = notamActions.Where(x => notamIds.Contains(x.NotamId)).ToList();
-    //     
-    //     var organizationClaim = new Claim("OrganizationId", "1");
-    //     mockHttpContextAccessor.Setup(x => x.HttpContext.User.FindFirst("OrganizationId"))
-    //         .Returns(organizationClaim);
-    //     mockNotamRepository.Setup(repo => repo.FindAsync(x => x.Location == "EKDK"))
-    //         .ReturnsAsync(notamList);
-    //     mockRepository.Setup(repo => repo.FindAsync(x => notamIds.Contains(x.NotamId)))
-    //         .ReturnsAsync(_notamActionList);
-    //     
-    //     // Act
-    //     var result = await controller.FindByLocationAsync("EKDK");
-    //
-    //     // Assert
-    //     var okResult = Assert.IsType<OkObjectResult>(result.Result);
-    //     var notamActionList = okResult.Value as IReadOnlyList<NotamAction>;
-    //     Assert.NotNull(notamActionList);
-    //     Assert.Equal(2, notamActionList.Count);
-    // }
+    
+    [Fact]
+    public async Task GetNotamActionsByLocationAsync_ReturnsListOfNotamActions()
+    {
+        // Arrange
+        var notamList = notams.Take(2).ToList();
+        var _notamActionList = notamActions.Where(x => notamList.Select(n => n.Id).Contains(x.NotamId)).ToList();
+        
+        var organizationClaim = new Claim("OrganizationId", "1");
+        mockHttpContextAccessor.Setup(x => x.HttpContext.User.FindFirst("OrganizationId"))
+            .Returns(organizationClaim);
+        mockNotamRepository.Setup(repo => repo.FindAsync(x => x.Location == "EKDK"))
+            .ReturnsAsync(notamList);
+        mockRepository.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<NotamAction, bool>>>()))
+            .ReturnsAsync(_notamActionList);
+        
+        // Act
+        var result = await controller.FindByLocationAsync("EKDK");
+    
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var notamActionList = okResult.Value as IReadOnlyList<NotamAction>;
+        Assert.NotNull(notamActionList);
+        Assert.Equal(2, notamActionList.Count);
+    }
 
     [Fact]
     public async Task CreateNotamActionAsync_ReturnsOk_WhenSuccessful()
