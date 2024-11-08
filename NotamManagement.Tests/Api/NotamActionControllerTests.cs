@@ -113,6 +113,21 @@ public class NotamActionControllerTests
     }
     
     [Fact]
+    public async Task GetAllNotamActionsAsync_ReturnsBadRequest_WhenOrganizationIdIsNull()
+    {
+        // Arrange
+        var organizationClaim = new Claim("OrganizationId", "");
+        mockHttpContextAccessor.Setup(x => x.HttpContext.User.FindFirst("OrganizationId"))
+            .Returns(organizationClaim);
+        
+        // Act
+        var result = await controller.GetAllNotamActionsAsync();
+
+        // Assert
+        Assert.IsType<BadRequestResult>(result.Result);
+    }
+    
+    [Fact]
     public async Task GetNotamActionsByLocationAsync_ReturnsListOfNotamActions()
     {
         // Arrange
