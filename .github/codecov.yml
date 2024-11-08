@@ -4,6 +4,8 @@
     - "NotamManagement.Core/Data/*"
     - "NotamManagement.Core/Migrations/*"
     - "NotamManagement.Core/Models/*"
+    - "NotamManagement.Core/Services/ApiAuthenticationStateProvider.cs"
+    - "NotamManagement.Core/Services/JwtTokenService.cs"
     - "NotamManagement.Api/Extensions/*"
     - "NotamManagement.Api/Helper/*"
     - "NotamManagement.Api/Controllers/OrganizationController.cs"
