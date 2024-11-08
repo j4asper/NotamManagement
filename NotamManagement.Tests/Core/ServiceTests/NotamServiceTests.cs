@@ -53,6 +53,33 @@ public class NotamServiceTests
     }
     
     [Fact]
+    public async Task GetNotamAsync_ReturnsNotam_WhenResponseIsSuccessful()
+    {
+        // Arrange
+        var jsonResponse = JsonSerializer.Serialize(notams.First());
+
+        httpMessageHandlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri == new Uri($"http://localhost/api/Notam/Id/{notams.First().Id}")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(jsonResponse, Encoding.UTF8, "application/json"),
+            })
+            .Verifiable();
+
+        // Act
+        var result = await notamService.GetNotamAsync(notams.First().Id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(notams.First().Id, result.Id);
+    }
+    
+    [Fact]
     public async Task GetAllNotamsAsAsyncEnumerable_ReturnsNotams_WhenResponseIsSuccessful()
     {
         // Arrange
