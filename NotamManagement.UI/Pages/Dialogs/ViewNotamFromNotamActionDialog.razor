@@ -1,0 +1,121 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+            View Notam
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+
+        <MudText>
+            @{
+                if (notam != null)
+                {
+                   <pre>
+                    <MudHighlighter Text="@notam.RawNotam"  HighlightedTexts="@specialTerms" />
+                   </pre> 
+                    
+                }
+                else
+                {
+                    <MudHighlighter></MudHighlighter>
+                    <pre>Notam not found</pre>
+                }
+
+            }
+        </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Success" OnClick="Exit">Exit</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+
+    [EditorRequired][Parameter] public NotamAction NotamAction { get; set; } = null!;
+
+    [Inject] public INotamService NotamService { get; set; } = null!;
+    public Notam notam = null;
+
+
+    private List<string> specialTerms = [ // Airspace and Navigation
+            "AD", // Aerodrome
+        "CTR", // Control Zone
+        "FIR", // Flight Information Region
+        "AWY", // Airway
+        "UTA", // Upper Control Area
+        "ATZ", // Aerodrome Traffic Zone
+
+        // Runways and Taxiways
+        "RWY", // Runway
+        "TWY", // Taxiway
+        "APRON", // Aircraft parking area
+        "CLSD", // Closed
+        "OPS", // Operations
+        "LGT", // Lighting (e.g., runway lighting)
+        "LDG", // Landing
+        "TKOF", // Takeoff
+        "RWY CLSD", // Runway Closed
+
+        // Equipment and Systems
+        "ILS", // Instrument Landing System
+        "VOR", // VHF Omnidirectional Range
+        "DME", // Distance Measuring Equipment
+        "NDB", // Non-Directional Beacon
+        "GP", // Glide Path (part of ILS)
+        "LOC", // Localizer (part of ILS)
+        "RVR", // Runway Visual Range
+
+        // Weather and Conditions
+        "WX", // Weather
+        "SIGMET", // Significant Meteorological Information
+        "SN", // Snow
+        "FZRA", // Freezing Rain
+        "TS", // Thunderstorm
+        "BR", // Mist
+        "FG", // Fog
+        "HZ", // Haze
+        "WND", // Wind
+        "TURB", // Turbulence
+        "ICG", // Icing
+
+        // Restrictions and Hazards
+        "PJE", // Parachute Jumping Exercise
+        "UAS", // Unmanned Aircraft System (drone activity)
+        "RMK", // Remarks
+        "TFR", // Temporary Flight Restriction
+        "VIP", // VIP movement or restrictions
+        "PROH", // Prohibited
+        "DNG", // Dangerous
+
+        // Other Operational Terms
+        "EOBT", // Estimated Off-Block Time
+        "ETA", // Estimated Time of Arrival
+        "ETD", // Estimated Time of Departure
+        "DEP", // Departure
+        "ARR", // Arrival
+        "TFC", // Traffic
+        "TRG", // Training
+        "FREQ", // Frequency
+        "STNR", // Stationary
+        "TEMP" // Temporary
+    ];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var n = await NotamService.GetNotamAsync(NotamAction.NotamId);
+        if (n != null)
+        {
+            notam = n;
+        }
+    }
+
+
+    private void Exit()
+    {
+        MudDialog.Cancel();
+    }
+}

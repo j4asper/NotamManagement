@@ -36,4 +36,17 @@ public class NotamService : INotamService
             yield return notam;
         }
     }
+
+    public async Task<Notam> GetNotamAsync(int notamId)
+    {
+        var response = await httpClient.GetAsync($"/api/Notam/Id/{notamId}");
+
+
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<Notam>();
+        }
+        return null;
+             
+    }
 }

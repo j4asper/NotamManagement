@@ -1,12 +1,15 @@
-﻿<MudCard Elevation="0" Class="mb-2 ma-4 border-solid border-2 mud-border-primary pa-2" Style="width: 500px; height: 250px;">
+﻿@using NotamManagement.UI.Pages.Dialogs
+<MudCard Elevation="0" Class="mb-2 ma-4 border-solid border-2 mud-border-primary pa-2" Style="width: 500px; height: 250px;">
     <MudChip T="string" Color="GetChipColor()">@NotamAction.Importance.ToString()</MudChip>
-    
+
     <MudText Align="Align.Left">Type: @NotamAction.Importance</MudText>
     <MudText Align="Align.Left">Note: @NotamAction.Note</MudText>
+    <MudButton Style="width: 200px;" OnClick="OpenNotamDialog" Color="Color.Primary" Variant="Variant.Filled">see notam</MudButton>
 </MudCard>
 
 @code {
-    [EditorRequired] [Parameter] public NotamAction NotamAction { get; set; } = null!;
+    [EditorRequired][Parameter] public NotamAction NotamAction { get; set; } = null!;
+    [Inject] public IDialogService DialogService { get; set; } = null!;
 
     private Color GetChipColor()
     {
@@ -17,4 +20,19 @@
             _ => Color.Primary
         };
     }
+
+    private async Task OpenNotamDialog()
+    {
+
+        
+
+        var parameters = new DialogParameters<ViewNotamFromNotamActionDialog> {{ x => x.NotamAction, NotamAction } };
+
+        var dialog = await DialogService.ShowAsync<ViewNotamFromNotamActionDialog>("View notam", parameters);
+        var result = await dialog.Result;
+
+       
+    }
+
+
 }
