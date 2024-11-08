@@ -1,0 +1,11 @@
+﻿coverage:
+  # Paths or files to exclude from coverage report
+  ignore:
+    - "NotamManagement.Core/Data/*"
+    - "NotamManagement.Core/Migrations/*"
+    - "NotamManagement.Core/Models/*"
+    - "NotamManagement.Api/Extensions/*"
+    - "NotamManagement.Api/Helper/*"
+    - "NotamManagement.Api/Controllers/OrganizationController.cs"
+    - "NotamManagement.Api/Controllers/UserController.cs"
+    - "NotamManagement.Api/Program.cs"
