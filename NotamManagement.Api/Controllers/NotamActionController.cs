@@ -71,7 +71,7 @@ public class NotamActionController : ControllerBase
     {
         var orgID = _httpContextAccessor.HttpContext.User.FindFirst("OrganizationId").Value;
 
-        if(orgID == null)
+        if(string.IsNullOrEmpty(orgID))
         {
             return BadRequest();
         }
