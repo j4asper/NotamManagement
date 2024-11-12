@@ -1,0 +1,33 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+            see notam actions for @airport.ICAO
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText>@errorMessage</MudText>
+        <NotamActionListViewComponent NotamActions="@NotamActionList" />
+    </DialogContent>
+ </MudDialog>
+
+ 
+
+@code {
+
+    private List<NotamAction> NotamActionList = new List<NotamAction>();
+    [Inject] public INotamActionService NotamActionService { get; set; } = null!;
+    [EditorRequired] [Parameter] public Airport airport { get; set; } = null!;
+
+    string errorMessage = "no notamActions for this location";
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var result = await NotamActionService.GetNotamActionsFromLocationAsync(airport.ICAO);
+        NotamActionList = result.ToList();
+        if (NotamActionList.Count > 0)
+            errorMessage = "";
+    }
+
+ }

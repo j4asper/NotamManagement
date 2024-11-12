@@ -11,5 +11,7 @@ namespace NotamManagement.Core.Services
     {
         Task<IReadOnlyList<NotamAction>> GetAllNotamActionsAsync();
         Task AddAsync(NotamAction notamAction);
+
+        Task<IReadOnlyList<NotamAction>> GetNotamActionsFromLocationAsync(string location);
     }
 }
