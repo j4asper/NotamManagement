@@ -169,5 +169,27 @@ public class FlightPlanControllerTests
         // Assert
         Assert.IsType<OkResult>(result);
     }
-
+    
+    [Fact]
+    public async Task UpdateFlightPlanByIdAsync_ReturnsOk_WhenFlightPlanExists()
+    {
+        // Arrange
+        var existingFlightPlan = flightPlans.First();
+        var actionToUpdate = new FlightPlan
+        {
+            Id = existingFlightPlan.Id,
+            Airports = existingFlightPlan.Airports
+        };
+        
+        mockRepository.Setup(r => r.UpdateAsync(It.IsAny<FlightPlan>())).Returns(Task.CompletedTask);
+        
+        // Act
+        var result = await controller.UpdateFlightPlanByIdAsync(existingFlightPlan.Id, actionToUpdate);
+    
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var updatedFlightPlan = Assert.IsType<FlightPlan>(okResult.Value);
+        // Assert.Equal(existingAirport.Id, updatedAirport.Id);
+        // Assert.Equal(airportToUpdate.ICAO, updatedAirport.ICAO);
+    }
 }
