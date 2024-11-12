@@ -169,4 +169,51 @@ public class NotamActionControllerTests
         var notamActionResult = okResult.Value as NotamAction;
         Assert.Equal(notamAction.Id, notamActionResult.Id);
     }
+    
+    [Fact]
+    public async Task UpdateNotamActionByIdAsync_ReturnsOk_WhenNotamActionExists()
+    {
+        // Arrange
+        var existingNotamAction = notamActions.First();
+        var notamActionToUpdate = new NotamAction
+        {
+            Id = existingNotamAction.Id,
+            NotamId = existingNotamAction.NotamId,
+            OrganizationId = existingNotamAction.OrganizationId
+        };
+        
+        mockRepository.Setup(r => r.GetByIdAsync(existingNotamAction.Id)).ReturnsAsync(existingNotamAction);
+        mockRepository.Setup(r => r.UpdateAsync(It.IsAny<NotamAction>())).Returns(Task.CompletedTask);
+        
+        // Act
+        var result = await controller.UpdateNotamActionByIdAsync(existingNotamAction.Id, notamActionToUpdate);
+    
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var updatedNotamAction = Assert.IsType<NotamAction>(okResult.Value);
+        // Assert.Equal(existingAirport.Id, updatedAirport.Id);
+        // Assert.Equal(airportToUpdate.ICAO, updatedAirport.ICAO);
+    }
+    
+    [Fact]
+    public async Task UpdateNotamActionByIdAsync_ReturnsNotFound_WhenNotamActionDoesNotExist()
+    {
+        // Arrange
+        var notamActionId = 999; // Non-existing notamAction ID
+        var notamActionToUpdate = new NotamAction
+        {
+            Id = notamActions.First().Id,
+            NotamId = notamActions.First().NotamId,
+            OrganizationId = notamActions.First().OrganizationId
+        };
+        
+        mockRepository.Setup(r => r.GetByIdAsync(notamActionId)).ReturnsAsync((NotamAction)null);
+        mockRepository.Setup(r => r.UpdateAsync(It.IsAny<NotamAction>())).Returns(Task.CompletedTask);
+        
+        // Act
+        var result = await controller.UpdateNotamActionByIdAsync(notamActionId, notamActionToUpdate);
+    
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
 }
