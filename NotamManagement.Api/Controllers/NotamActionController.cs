@@ -60,7 +60,7 @@ public class NotamActionController : ControllerBase
             return NotFound();
         }
         await _notamActionRepository.UpdateAsync(notamAction);
-        return Ok(nAction);
+        return Ok(notamAction);
     }
     
     [Authorize]

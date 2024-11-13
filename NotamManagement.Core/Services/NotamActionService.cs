@@ -40,5 +40,12 @@ namespace NotamManagement.Core.Services
             var result = await response.Content.ReadFromJsonAsync<IReadOnlyList<NotamAction>>();
             return result ?? [];
         }
+
+        public async Task UpdateNotamAction(NotamAction notamAction)
+        {
+            var response = await httpClient.PutAsJsonAsync($"/api/notamaction/id/{notamAction.Id}", notamAction);
+            response.EnsureSuccessStatusCode();
+           
+        }
     }
 }

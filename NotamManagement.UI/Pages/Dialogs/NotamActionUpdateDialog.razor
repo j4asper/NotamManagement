@@ -1,0 +1,65 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1"/>
+            Create notam action
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudExpansionPanels Class="mb-2">
+            <MudExpansionPanel Text="View Raw NOTAM">
+                <MudText>
+                    <pre>@(notam?.RawNotam ?? "no notam found")</pre>
+                </MudText>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+        <MudSelect T="Importance" Variant="Variant.Outlined" @bind-Value="@NotamAction!.Importance">
+            @foreach (Importance item in Enum.GetValues(typeof(Importance)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField T="string" @bind-Value="@NotamAction!.Note" Variant="Variant.Outlined" Lines="3" Label="Note"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="Save">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+
+    [Inject] public INotamActionService NotamActionService { get; set; } = null!;
+    [Inject] public INotamService NotamService { get; set; } = null!;
+
+    public Notam? notam { get; set; } = null;
+
+    [EditorRequired] [Parameter] public NotamAction NotamAction { get; set; } = null!;
+
+    private void Cancel() => MudDialog.Cancel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var n = await NotamService.GetNotamAsync(NotamAction.NotamId);
+        if (n != null)
+        {
+            notam = n;
+        }
+    }
+
+    private void Save()
+    {
+        if (NotamAction == null)
+        {
+            return;
+        }
+        // Save new notam action with NotamActionService
+        NotamActionService.UpdateNotamAction(NotamAction);
+        Snackbar.Add("Notam Action Updated!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(notam));
+    }
+}

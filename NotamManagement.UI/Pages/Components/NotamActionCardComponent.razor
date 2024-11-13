@@ -27,9 +27,9 @@
 
     private async Task OpenEditNotamAction()
     {
-        var parameters = new DialogParameters<NotamActionCreateDialog> { { x => x.NotamAction, NotamAction } };
+        var parameters = new DialogParameters<NotamActionUpdateDialog> { { x => x.NotamAction, NotamAction } };
 
-        var dialog = await DialogService.ShowAsync<NotamActionCreateDialog>("Edit notam action", parameters);
+        var dialog = await DialogService.ShowAsync<NotamActionUpdateDialog>("Edit notam action", parameters);
         var result = await dialog.Result;
     }
 
