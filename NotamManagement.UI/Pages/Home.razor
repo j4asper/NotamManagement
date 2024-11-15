@@ -57,7 +57,7 @@
             FilterChanged();
         }
     }
-    
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -65,16 +65,23 @@
         HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var authstate = await ApiAuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authstate.User;
+        
+        
         if(!user.Identity.IsAuthenticated)
         {
             NavigationManager.NavigateTo("/authentication/login");
         }
+        else
+        {
+            var notamActions = await notamActionService.GetAllNotamActionsAsync();
+            NotamActions = notamActions.ToList();
+            NotamActionsFiltered = NotamActions.ToList();
 
-        var notamActions = await notamActionService.GetAllNotamActionsAsync();
-        NotamActions = notamActions.ToList();
-        NotamActionsFiltered = NotamActions.ToList();
+            await GetAllNotams();
 
-        await GetAllNotams();
+        }
+
+        
     }
 
     private void FilterChanged()
