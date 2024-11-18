@@ -105,6 +105,23 @@ public class NotamControllerTests
     }
     
     [Fact]
+    public async Task GetAllNotamsByOrganizationId_ReturnsUnhandledNotamsForOrganization()
+    {
+        // Arrange
+        mockRepository.Setup(repo => repo.GetAllUnhandledAsync(1))
+            .ReturnsAsync(notams.ToList()); // Return the predefined list
+        
+        // Act
+        var result = await controller.GetNotamsByOrganizationIdAsync(1);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var notamList = okResult.Value as IReadOnlyList<Notam>;
+        Assert.NotNull(notamList);
+        Assert.Equal(notams.Count, notamList.Count);
+    }
+    
+    [Fact]
     public async Task GetAllNotamsAsAsyncEnumerable_ReturnsAsyncEnumerableOfNotams()
     {
         // Arrange
