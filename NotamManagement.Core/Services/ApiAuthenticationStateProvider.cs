@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
@@ -18,11 +19,23 @@ namespace NotamManagement.Core.Services
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var token = await _localStorage.GetItemAsync<string>("jwt_token");
-
+            var anonymousState = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             // Check if token exists and create identity
             var identity = string.IsNullOrEmpty(token)
                 ? new ClaimsIdentity()
                 : new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+
+            var claims = ParseClaimsFromJwt(token);
+            // Checks the exp field of the token
+            var expiry = claims.Where(claim => claim.Type.Equals("exp")).FirstOrDefault();
+            if (expiry == null)
+                return anonymousState;
+
+            // The exp field is in Unix time
+            var datetime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(expiry.Value));
+            if (datetime.UtcDateTime <= DateTime.UtcNow)
+                return anonymousState;
+
 
             var user = new ClaimsPrincipal(identity);
             return new AuthenticationState(user);

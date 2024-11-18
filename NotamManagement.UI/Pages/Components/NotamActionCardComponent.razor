@@ -4,7 +4,11 @@
 
     <MudText Align="Align.Left">Type: @NotamAction.Importance</MudText>
     <MudText Align="Align.Left">Note: @NotamAction.Note</MudText>
-    <MudButton Style="width: 200px;" OnClick="OpenNotamDialog" Color="Color.Primary" Variant="Variant.Filled">see notam</MudButton>
+    <MudStack Row="true">
+        <MudButton Style="width: 200px;" OnClick="OpenNotamDialog" Color="Color.Primary" Variant="Variant.Filled">See notam</MudButton>
+        <MudButton Style="width: 200px;" OnClick="OpenEditNotamAction" Color="Color.Primary" Variant="Variant.Filled">Edit</MudButton>
+    </MudStack>
+
 </MudCard>
 
 @code {
@@ -19,6 +23,14 @@
             Importance.Important => Color.Error,
             _ => Color.Primary
         };
+    }
+
+    private async Task OpenEditNotamAction()
+    {
+        var parameters = new DialogParameters<NotamActionUpdateDialog> { { x => x.NotamAction, NotamAction } };
+
+        var dialog = await DialogService.ShowAsync<NotamActionUpdateDialog>("Edit notam action", parameters);
+        var result = await dialog.Result;
     }
 
     private async Task OpenNotamDialog()

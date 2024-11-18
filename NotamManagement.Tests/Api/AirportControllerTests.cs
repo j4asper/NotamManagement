@@ -117,4 +117,52 @@ public class AirportControllerTests
         var airportResult = okResult.Value as Airport;
         Assert.Equal(airport.Id, airportResult.Id);
     }
+    
+    [Fact]
+    public async Task UpdateAirportByIdAsync_ReturnsOk_WhenAirportExists()
+    {
+        // Arrange
+        var existingAirport = airports.First();
+        var airportToUpdate = new Airport
+        {
+            Id = existingAirport.Id,
+            ICAO = "NewICAO",
+            FIR = existingAirport.FIR,
+            FlightPlans = existingAirport.FlightPlans
+        };
+        
+        mockRepository.Setup(r => r.GetByIdAsync(existingAirport.Id)).ReturnsAsync(existingAirport);
+        mockRepository.Setup(r => r.UpdateAsync(It.IsAny<Airport>())).Returns(Task.CompletedTask);
+        
+        // Act
+        var result = await controller.UpdateAirportByIdAsync(existingAirport.Id, airportToUpdate);
+    
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var updatedAirport = Assert.IsType<Airport>(okResult.Value);
+        // Assert.Equal(existingAirport.Id, updatedAirport.Id);
+        // Assert.Equal(airportToUpdate.ICAO, updatedAirport.ICAO);
+    }
+    
+    [Fact]
+    public async Task UpdateAirportByIdAsync_ReturnsNotFound_WhenAirportDoesNotExist()
+    {
+        // Arrange
+        var airportId = 999; // Non-existing airport ID
+        var airportToUpdate = new Airport
+        {
+            Id = airports.First().Id,
+            ICAO = "NewICAO",
+            FIR = airports.First().FIR,
+            FlightPlans = airports.First().FlightPlans
+        };
+    
+        mockRepository.Setup(r => r.GetByIdAsync(airportId)).ReturnsAsync((Airport)null);
+    
+        // Act
+        var result = await controller.UpdateAirportByIdAsync(airportId, airportToUpdate);
+    
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
 }

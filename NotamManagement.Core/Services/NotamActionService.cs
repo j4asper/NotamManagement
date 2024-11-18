@@ -32,5 +32,20 @@ namespace NotamManagement.Core.Services
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IReadOnlyList<NotamAction>>() ?? [];
         }
+
+        public async Task<IReadOnlyList<NotamAction>> GetNotamActionsFromLocationAsync(string location)
+        {
+            var response = await httpClient.GetAsync($"/api/notamaction/find?location={location.ToUpper()}");
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<IReadOnlyList<NotamAction>>();
+            return result ?? [];
+        }
+
+        public async Task UpdateNotamAction(NotamAction notamAction)
+        {
+            var response = await httpClient.PutAsJsonAsync($"/api/notamaction/id/{notamAction.Id}", notamAction);
+            response.EnsureSuccessStatusCode();
+           
+        }
     }
 }

@@ -85,10 +85,18 @@ namespace NotamManagement.Core.Repository
             await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(Airport entity)
+        public async Task UpdateAsync(Airport entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            return _context.SaveChangesAsync();
+            var trackedEntity = await _dbSet.FindAsync(entity.Id);
+            if (trackedEntity != null)
+            {
+                _context.Entry(trackedEntity).CurrentValues.SetValues(entity);
+            }
+            else
+            {
+                _dbSet.Update(entity);
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -29,6 +29,8 @@
     [Inject] public HttpClient HttpClient { get; set; } = null!;
     [Inject] public INotamActionService notamActionService { get; set; } = null!;
     [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
+    [Inject] public ApiAuthenticationStateProvider ApiAuthenticationStateProvider { get; set; } = null!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = null!;
 
     private List<Notam> Notams = [];
     private List<NotamAction> NotamActions = [];
@@ -45,7 +47,7 @@
     private string _selectedFilter;
 
 
-    private bool _showIgnored = true;
+    private bool _showIgnored = false;
 
     public bool showIgnored
     {
@@ -55,19 +57,31 @@
             FilterChanged();
         }
     }
-    
+
 
     protected override async Task OnInitializedAsync()
     {
         var token = await LocalStorage.GetItemAsync<string>("jwt_token");
         HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var authstate = await ApiAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authstate.User;
+        
+        
+        if(!user.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/authentication/login");
+        }
+        else
+        {
+            var notamActions = await notamActionService.GetAllNotamActionsAsync();
+            NotamActions = notamActions.ToList();
+            NotamActionsFiltered = NotamActions.ToList();
 
+            await GetAllNotams();
 
-        var notamActions = await notamActionService.GetAllNotamActionsAsync();
-        NotamActions = notamActions.ToList();
-        NotamActionsFiltered = NotamActions.ToList();
+        }
 
-        await GetAllNotams();
+        
     }
 
     private void FilterChanged()

@@ -90,7 +90,15 @@ namespace NotamManagement.Core.Repository
 
         public async Task UpdateAsync(NotamAction entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
+            var trackedEntity = await _dbSet.FindAsync(entity.Id);
+            if (trackedEntity != null)
+            {
+                _context.Entry(trackedEntity).CurrentValues.SetValues(entity);
+            }
+            else
+            {
+                _dbSet.Update(entity);
+            }
             await _context.SaveChangesAsync();
         }
     }
