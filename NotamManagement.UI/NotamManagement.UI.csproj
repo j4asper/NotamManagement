@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="LeafletForBlazor" Version="2.2.2.2" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />

@@ -1,0 +1,86 @@
+﻿@page "/map"
+@using LeafletForBlazor
+
+
+<PageTitle>Map</PageTitle>
+
+<RealTimeMap @ref="leafletMap" width="460px" OnAfterMapLoaded="AddMarker" height="460px" />
+@code {
+
+
+    [Inject] public INotamService NotamService { get; set; } = null!;
+    RealTimeMap? leafletMap;
+    IReadOnlyList<Notam>? notams;
+    List<RealTimeMap.StreamPoint> points = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var random = new Random();
+        await base.OnInitializedAsync();
+        var n = await NotamService.GetAllNotamsAsync();
+        notams = n;
+        foreach (var notam in notams)
+        {
+            notam.Coordinates.Latitude += (float)(random.NextDouble() * 0.001);
+            notam.Coordinates.Longitude += (float)(random.NextDouble() * 0.001);
+            points.Add(new RealTimeMap.StreamPoint
+                {
+                    latitude = notam.Coordinates.Latitude,
+                    longitude = notam.Coordinates.Longitude,
+                    value = notam,
+                    type = "Notam",
+                    guid = Guid.NewGuid()
+
+
+
+
+                });
+
+        }
+
+
+    }
+
+    private async Task AddMarker()
+    {
+        var symbol = new RealTimeMap.PointSymbol()
+            {
+                color = "green",
+                fillColor = "green",
+                fillOpacity = 0.5,
+                radius = 10
+            };
+        leafletMap.Geometric.Points.AppearanceOnType(item => true).pattern = new RealTimeMap.PointTooltip()
+            {
+                content = "<b>Notam: </b>${value.NotamText}</br><b>Vehicle type: </b>${value.Location}</br>${value.FIR}",
+                opacity = 0.8,
+                permanent = false
+               
+            };
+
+
+
+        // double latitude = 43.6;
+        // double longitude = 3.8;
+        // var point = new RealTimeMap.StreamPoint
+        //     {
+        //         type = "Station 1",
+        //         latitude = latitude,
+        //         longitude = longitude,
+
+        //     };
+        // foreach (var point in points)
+        // {
+        //     var lat = point.latitude;
+        //     var lon = point.longitude;
+        //     double[] pointArray = { lat, lon };
+        //     await leafletMap.Geometric.DisplayPointsFromArray.addPoint(pointArray);
+
+        // }
+        await leafletMap.Geometric.Points.upload(points);
+        // leafletMap.Geometric.DisplayPointsFromArray.addPoint(points);
+        // await leafletMap.Geometric.Points.add(points.ToArray());
+
+    }
+}
