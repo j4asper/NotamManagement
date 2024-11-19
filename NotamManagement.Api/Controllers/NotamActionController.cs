@@ -10,6 +10,7 @@ using System.Web;
 namespace NotamManagement.Api.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class NotamActionController : ControllerBase
 {
@@ -24,7 +25,7 @@ public class NotamActionController : ControllerBase
         _notamRepository = notamRepository;
     }
 
-
+    [Authorize]
     [HttpGet("Id/{notamActionId:int}")]
     [ProducesResponseType<NotamAction>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -39,7 +40,7 @@ public class NotamActionController : ControllerBase
         
 
     }
-    
+    [Authorize]
     [HttpDelete("Id/{notamActionId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,7 +49,7 @@ public class NotamActionController : ControllerBase
         await _notamActionRepository.RemoveAsync(notamActionId);
         return Ok();
     }
-    
+    [Authorize]
     [HttpPut("Id/{notamActionId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -79,7 +80,7 @@ public class NotamActionController : ControllerBase
         var notams = await _notamActionRepository.GetAllAsync(int.Parse(orgID));
         return Ok(notams);
     }
-    
+    [Authorize]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> CreateNotamActionAsync(NotamAction notamAction, CancellationToken cancellationToken = default)

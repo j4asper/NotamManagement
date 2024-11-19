@@ -7,6 +7,7 @@ using NotamManagement.Core.Repository;
 namespace NotamManagement.Api.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class NotamController : ControllerBase
 {

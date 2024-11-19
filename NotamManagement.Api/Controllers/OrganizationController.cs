@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotamManagement.Core.Models;
 using NotamManagement.Core.Repository;
@@ -5,6 +6,7 @@ using NotamManagement.Core.Repository;
 namespace NotamManagement.Api.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class OrganizationController : ControllerBase
 {
