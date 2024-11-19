@@ -1,14 +1,16 @@
 ﻿@page "/map"
 @using LeafletForBlazor
+@using NotamManagement.UI.Pages.Dialogs
 
 
 <PageTitle>Map</PageTitle>
 
-<RealTimeMap @ref="leafletMap" width="460px" OnAfterMapLoaded="AddMarker" height="460px" />
+<RealTimeMap @ref="leafletMap" height="calc(100vh - 10rem)" width="calc(100vw - 18rem)" OnClickMap="OnClickMap" OnAfterMapLoaded="AddMarker" />
 @code {
 
 
     [Inject] public INotamService NotamService { get; set; } = null!;
+    [Inject] public IDialogService dialogService { get; set; } = null!;
     RealTimeMap? leafletMap;
     IReadOnlyList<Notam>? notams;
     List<RealTimeMap.StreamPoint> points = new();
@@ -28,7 +30,7 @@
                 {
                     latitude = notam.Coordinates.Latitude,
                     longitude = notam.Coordinates.Longitude,
-                    value = notam,
+                    value = (Notam)notam,
                     type = "Notam",
                     guid = Guid.NewGuid()
 
@@ -42,45 +44,85 @@
 
     }
 
+    public async Task OnClickMap(RealTimeMap.ClicksMapArgs value)
+    {
+        List<RealTimeMap.StreamPoint> foundPoints = (value.sender as RealTimeMap).Geometric.Points.getItems(
+            point => (value.sender as RealTimeMap).Geometric.Computations.distance(
+                point,
+                new RealTimeMap.StreamPoint() { latitude = value.location.latitude, longitude = value.location.longitude },
+                RealTimeMap.UnitOfMeasure.meters
+            ) <= 100
+        );
+
+        if (foundPoints is null || foundPoints.Count == 0) return;
+
+        foreach(var pointi in foundPoints)
+        {
+            await OpenNotamDialog(pointi.value as Notam);
+        }
+
+        // var point = foundPoints.Last();
+
+        // var pointAttributes = point.value as Notam;
+
+        // if (pointAttributes is null) return;
+        // await OpenNotamDialog(pointAttributes);
+
+
+    }
+
+
+    private async Task OpenNotamDialog(Notam notam)
+    {
+
+
+
+        var parameters = new DialogParameters<ViewNotamFromMap> { { x => x.Notam, notam } };
+
+        var dialog = await dialogService.ShowAsync<ViewNotamFromMap>("View notam", parameters);
+        var result = await dialog.Result;
+
+
+    }
+
     private async Task AddMarker()
     {
-        var symbol = new RealTimeMap.PointSymbol()
-            {
-                color = "green",
-                fillColor = "green",
-                fillOpacity = 0.5,
-                radius = 10
-            };
-        leafletMap.Geometric.Points.AppearanceOnType(item => true).pattern = new RealTimeMap.PointTooltip()
-            {
-                content = "<b>Notam: </b>${value.NotamText}</br><b>Vehicle type: </b>${value.Location}</br>${value.FIR}",
-                opacity = 0.8,
-                permanent = false
-               
-            };
+        if (leafletMap != null)
+        {
+            var symbol = new RealTimeMap.PointSymbol()
+                {
+                    color = "blue",
+                    fillColor = "blue",
+                    fillOpacity = 0.5,
+                    radius = 10
+                };
+
+            leafletMap.Geometric.Points.AppearanceOnType(item => item.type == "Notam").pattern = new RealTimeMap.PointTooltip()
+                    {
+                        content = "<b>Identifier:</b> ${value.identifier}</br> <b>FIR:</b> ${value.fir} </br> <b>NOF: </b>${value.notamOffice}</br> <b>Valid from:</b> ${value.validFrom} </br> <b>Valid to:</b> ${value.validTo}",
+                        opacity = 0.6,
+                        permanent = false
+
+
+                    };
+            leafletMap.Geometric.Points.AppearanceOnType(item => item.type == "Notam").pattern = new RealTimeMap.PointSymbol()
+                {
+                    color = "blue",
+                    fillColor = "blue",
+                    fillOpacity = 0.2,
+                    opacity = 0.7,
+                    radius = 10
+
+                };
+
+
+            await leafletMap.Geometric.Points.upload(points,false,symbol);
+
+        }
 
 
 
-        // double latitude = 43.6;
-        // double longitude = 3.8;
-        // var point = new RealTimeMap.StreamPoint
-        //     {
-        //         type = "Station 1",
-        //         latitude = latitude,
-        //         longitude = longitude,
 
-        //     };
-        // foreach (var point in points)
-        // {
-        //     var lat = point.latitude;
-        //     var lon = point.longitude;
-        //     double[] pointArray = { lat, lon };
-        //     await leafletMap.Geometric.DisplayPointsFromArray.addPoint(pointArray);
-
-        // }
-        await leafletMap.Geometric.Points.upload(points);
-        // leafletMap.Geometric.DisplayPointsFromArray.addPoint(points);
-        // await leafletMap.Geometric.Points.add(points.ToArray());
 
     }
 }
