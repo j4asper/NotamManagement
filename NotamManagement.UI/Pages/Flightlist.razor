@@ -1,5 +1,8 @@
 ﻿@page "/flightlist"
 @using NotamManagement.UI.Pages.Dialogs
+@using Microsoft.AspNetCore.Authorization
+@using System.Net.Http.Headers
+
 @attribute [Authorize]
 
 <MudDataGrid MultiSelection="true" Items="@FlightPlans" Filterable="true" Groupable="true" GroupExpanded="false">
@@ -40,12 +43,15 @@
     [Inject] public ApiAuthenticationStateProvider AuthStateProvider{ get; set; } = null!;
     [Inject] public IDialogService DialogService { get; set; } = null!;
     [Inject] public NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
     
     List<FlightPlan> FlightPlans = [];
 
     protected override async Task OnInitializedAsync()
     {
-        
+        var token = await LocalStorage.GetItemAsync<string>("jwt_token");
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var result = await FlightPlanService.GetAllAsync();
         
