@@ -16,10 +16,13 @@ public class NotamService : INotamService
     public async Task<IReadOnlyList<Notam>> GetAllNotamsAsync()
     {
         var response = await httpClient.GetAsync("/api/notam");
-
-        var notams = await response.Content.ReadFromJsonAsync<IReadOnlyList<Notam>>();
+        if(response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<IReadOnlyList<Notam>>();
+        }
         
-        return notams ?? [];
+        
+        return [];
     }
 
     public async IAsyncEnumerable<Notam> GetAllNotamsAsAsyncEnumerable()

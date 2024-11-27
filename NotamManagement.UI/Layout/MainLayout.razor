@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Net.Http.Headers
+@inherits LayoutComponentBase
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"/>
 <MudPopoverProvider/>
@@ -49,10 +50,22 @@
     private bool _drawerOpen = true;
     private bool _isDarkMode = true;
     private MudTheme? _theme;
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
+    [Inject] public ApiAuthenticationStateProvider ApiAuthenticationStateProvider { get; set; } = null!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = null!;
 
-    protected override void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
+
+        var token = await LocalStorage.GetItemAsync<string>("jwt_token");
+
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var authstate = await ApiAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authstate.User;
+
+       await base.OnInitializedAsync();
 
         _theme = new()
         {
@@ -111,6 +124,8 @@
         Divider = "#292838",
         OverlayLight = "#1e1e2d80",
     };
+
+   
 
     public string DarkLightModeButtonIcon => _isDarkMode switch
     {
