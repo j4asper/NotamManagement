@@ -1,23 +1,41 @@
 ﻿@page "/map"
 @using LeafletForBlazor
 @using NotamManagement.UI.Pages.Dialogs
+@using System.Net.Http.Headers
+@if (!isLoaded)
+{
+    <div>Loading, please wait...</div>
+}
+else
+{
+    <RealTimeMap @ref="leafletMap" height="calc(100vh - 10rem)" width="calc(100vw - 18rem)" OnClickMap="OnClickMap" OnAfterMapLoaded="AddMarker" />
+}
 
 
-<PageTitle>Map</PageTitle>
-
-<RealTimeMap @ref="leafletMap" height="calc(100vh - 10rem)" width="calc(100vw - 18rem)" OnClickMap="OnClickMap" OnAfterMapLoaded="AddMarker" />
 @code {
 
 
     [Inject] public INotamService NotamService { get; set; } = null!;
     [Inject] public IDialogService dialogService { get; set; } = null!;
+    [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
     RealTimeMap? leafletMap;
     IReadOnlyList<Notam>? notams;
     List<RealTimeMap.StreamPoint> points = new();
+    bool isLoaded = false;
+    RealTimeMap.PointSymbol symbol = new RealTimeMap.PointSymbol()
+        {
+            color = "blue",
+            fillColor = "blue",
+            fillOpacity = 0.5,
+            radius = 10
+        };
 
 
     protected override async Task OnInitializedAsync()
     {
+        var token = await LocalStorage.GetItemAsync<string>("jwt_token");
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var random = new Random();
         await base.OnInitializedAsync();
         var n = await NotamService.GetAllNotamsAsync();
@@ -33,14 +51,10 @@
                     value = (Notam)notam,
                     type = "Notam",
                     guid = Guid.NewGuid()
-
-
-
-
                 });
-
         }
 
+        isLoaded = true;
 
     }
 
@@ -87,17 +101,12 @@
 
     private async Task AddMarker()
     {
-        if (leafletMap != null)
-        {
-            var symbol = new RealTimeMap.PointSymbol()
-                {
-                    color = "blue",
-                    fillColor = "blue",
-                    fillOpacity = 0.5,
-                    radius = 10
-                };
 
-            leafletMap.Geometric.Points.AppearanceOnType(item => item.type == "Notam").pattern = new RealTimeMap.PointTooltip()
+
+            if (leafletMap != null)
+            {
+
+                leafletMap.Geometric.Points.AppearanceOnType(item => item.type == "Notam").pattern = new RealTimeMap.PointTooltip()
                     {
                         content = "<b>Identifier:</b> ${value.identifier}</br> <b>FIR:</b> ${value.fir} </br> <b>NOF: </b>${value.notamOffice}</br> <b>Valid from:</b> ${value.validFrom} </br> <b>Valid to:</b> ${value.validTo}",
                         opacity = 0.6,
@@ -105,20 +114,21 @@
 
 
                     };
-            leafletMap.Geometric.Points.AppearanceOnType(item => item.type == "Notam").pattern = new RealTimeMap.PointSymbol()
-                {
-                    color = "blue",
-                    fillColor = "blue",
-                    fillOpacity = 0.2,
-                    opacity = 0.7,
-                    radius = 10
+                leafletMap.Geometric.Points.AppearanceOnType(item => item.type == "Notam").pattern = new RealTimeMap.PointSymbol()
+                    {
+                        color = "blue",
+                        fillColor = "blue",
+                        fillOpacity = 0.2,
+                        opacity = 0.7,
+                        radius = 10
 
-                };
+                    };
 
 
-            await leafletMap.Geometric.Points.upload(points,false,symbol);
-
-        }
+                await leafletMap.Geometric.Points.upload(points, false, symbol);
+            }
+        
+ 
 
 
 

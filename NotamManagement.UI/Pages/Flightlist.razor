@@ -84,7 +84,7 @@
         var organizationIdClaim = user.FindFirst("OrganizationId");
        
 
-        var dialog = await DialogService.ShowAsync<FlightPlanCreateDialog>("Do something to this notam");
+        var dialog = await DialogService.ShowAsync<FlightPlanCreateDialog>("Create flight plan");
         var result = await dialog.Result;
 
         if (result is { Canceled: false })
