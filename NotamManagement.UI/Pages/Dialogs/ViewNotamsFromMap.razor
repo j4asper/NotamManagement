@@ -1,0 +1,96 @@
+﻿<MudDialog>
+    <TitleContent >
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                View Notam
+            </MudText>
+
+
+    </TitleContent>
+
+    <DialogContent>
+        @if (Notams != null && Notams.Any())
+        {
+                <MudText>
+                    <pre>
+                    <MudHighlighter Text="@Notams[currentPage].RawNotam" HighlightedTexts="@specialTerms" />
+                    </pre>
+                </MudText>
+      
+        }
+        else
+        {
+            <MudText>
+                <pre>No NOTAMs available</pre>
+            </MudText>
+        }
+    </DialogContent>
+
+    <DialogActions>
+        <MudText>
+            Page: @CurrentPage / @Notams.Count
+        </MudText>
+        <MudButton Variant="Variant.Text" Disabled="@IsFirstPage" OnClick="PreviousPage">Previous</MudButton>
+        <MudButton Variant="Variant.Text" Disabled="@IsLastPage" OnClick="NextPage">Next</MudButton>
+        <MudButton Color="Color.Success" OnClick="Exit">Exit</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+
+    [Parameter, EditorRequired] public List<Notam> Notams { get; set; } = null!;  // This is the list passed into the component
+
+
+
+    public int currentPage = 0;
+    public int CurrentPage
+    {
+        get => currentPage + 1;
+        set
+        {
+            currentPage = value - 1;
+        }
+    }
+    // Helper properties for pagination state
+    private bool IsFirstPage => currentPage == 0;
+    private bool IsLastPage => currentPage == Notams.Count - 1;
+
+    private List<string> specialTerms = new()
+    {
+        "AD", "CTR", "FIR", "AWY", "UTA", "ATZ",
+        "RWY", "TWY", "APRON", "CLSD", "OPS", "LGT", "LDG", "TKOF", "RWY CLSD",
+        "ILS", "VOR", "DME", "NDB", "GP", "LOC", "RVR",
+        "WX", "SIGMET", "SN", "FZRA", "TS", "BR", "FG", "HZ", "WND", "TURB", "ICG",
+        "PJE", "UAS", "RMK", "TFR", "VIP", "PROH", "DNG",
+        "EOBT", "ETA", "ETD", "DEP", "ARR", "TFC", "TRG", "FREQ", "STNR", "TEMP"
+    };
+
+    private void PreviousPage()
+    {
+        if (!IsFirstPage)
+        {
+            currentPage--;
+        }
+        StateHasChanged();
+        base.StateHasChanged();
+    }
+
+    private void NextPage()
+    {
+        if (!IsLastPage)
+        {
+            currentPage++;
+        }
+        StateHasChanged();
+        base.StateHasChanged();
+
+
+    }
+
+    private void Exit()
+    {
+        MudDialog.Cancel();
+    }
+}

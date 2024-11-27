@@ -36,14 +36,14 @@ else
     {
         var token = await LocalStorage.GetItemAsync<string>("jwt_token");
         HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var random = new Random();
+        // var random = new Random();
         await base.OnInitializedAsync();
         var n = await NotamService.GetAllNotamsAsync();
         notams = n;
         foreach (var notam in notams)
         {
-            notam.Coordinates.Latitude += (float)(random.NextDouble() * 0.001);
-            notam.Coordinates.Longitude += (float)(random.NextDouble() * 0.001);
+            // notam.Coordinates.Latitude += (float)(random.NextDouble() * 0.001);
+            // notam.Coordinates.Longitude += (float)(random.NextDouble() * 0.001);
             points.Add(new RealTimeMap.StreamPoint
                 {
                     latitude = notam.Coordinates.Latitude,
@@ -70,10 +70,7 @@ else
 
         if (foundPoints is null || foundPoints.Count == 0) return;
 
-        foreach(var pointi in foundPoints)
-        {
-            await OpenNotamDialog(pointi.value as Notam);
-        }
+        await OpenNotamsDialog(foundPoints.Select(p => p.value as Notam).ToList());
 
         // var point = foundPoints.Last();
 
@@ -86,17 +83,22 @@ else
     }
 
 
-    private async Task OpenNotamDialog(Notam notam)
+    // private async Task OpenNotamDialog(Notam notam)
+    // {
+
+    //     var parameters = new DialogParameters<ViewNotamFromMap> { { x => x.Notam, notam } };
+
+    //     var dialog = await dialogService.ShowAsync<ViewNotamFromMap>("View notam", parameters);
+    //     var result = await dialog.Result;
+
+
+    // }
+
+    private async Task OpenNotamsDialog(List<Notam> notams)
     {
-
-
-
-        var parameters = new DialogParameters<ViewNotamFromMap> { { x => x.Notam, notam } };
-
-        var dialog = await dialogService.ShowAsync<ViewNotamFromMap>("View notam", parameters);
+        var parameters = new DialogParameters<ViewNotamsFromMap> { { x => x.Notams, notams } };
+        var dialog = await dialogService.ShowAsync<ViewNotamsFromMap>("View notams", parameters);
         var result = await dialog.Result;
-
-
     }
 
     private async Task AddMarker()
