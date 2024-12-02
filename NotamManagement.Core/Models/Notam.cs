@@ -40,7 +40,7 @@ public class Notam
     [JsonIgnore]
     public string? RawNotam => $"{Identifier} NOTAM{Type.ToString().Substring(0, 1)} {ReferenceIdentifier ?? String.Empty} \n" +
         $"Q) {FIR}/Q{QCode}/{Traffic}/{Purpose}/{Scope}/{Coordinates.LowerFlightLevel.ToString("D3")}/{Coordinates.UpperFlightLevel.ToString("D3")}/{Coordinates.LongLat}/{Coordinates.Radius.ToString("D3")} \n" +
-        $"A) {NotamOffice}\n" +
+        $"A) {Location}\n" +
         $"B) {ValidFrom.ToString("yyMMddHHmm")} \n{(IsPermanent ? "C) PERM" : ValidTo.HasValue ? $"C) {ValidTo?.ToString("yyMMddHHmm")}" : "")} \n" +
         $"E) {NotamText}";
 
