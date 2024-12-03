@@ -16,11 +16,15 @@ else
 
 
     [Inject] public INotamService NotamService { get; set; } = null!;
+    [Inject] public INotamActionService NotamActionService { get; set; } = null!;
     [Inject] public IDialogService dialogService { get; set; } = null!;
     [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
     [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] public IFlightPlanService flightPlanService { get; set; } = null!;
     RealTimeMap? leafletMap;
-    IReadOnlyList<Notam>? notams;
+    List<Notam>? notams;
+    int flightPlanId = 0;
     List<RealTimeMap.StreamPoint> points = new();
     bool isLoaded = false;
     RealTimeMap.PointSymbol symbol = new RealTimeMap.PointSymbol()
@@ -38,8 +42,26 @@ else
         HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         // var random = new Random();
         await base.OnInitializedAsync();
-        var n = await NotamService.GetAllNotamsAsync();
-        notams = n;
+        var uri = new Uri(NavigationManager.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        if (query["flightplan"] != null){
+            flightPlanId = int.Parse(query["flightplan"]);
+            var n = await flightPlanService.GetAsync(flightPlanId);
+            foreach(var airport in n.Airports){
+               var notamact = await NotamActionService.GetNotamActionsFromLocationAsync(airport.ICAO);
+               if(notamact!=null){
+                notams.AddRange(notamact.Where(x=>x.Notam!=null).Select(x => x.Notam).ToList());
+               }
+                
+
+
+            }
+        }
+        else{
+            var n = await NotamService.GetAllNotamsAsync();
+            notams = n.ToList();
+        }
+
         foreach (var notam in notams)
         {
             // notam.Coordinates.Latitude += (float)(random.NextDouble() * 0.001);

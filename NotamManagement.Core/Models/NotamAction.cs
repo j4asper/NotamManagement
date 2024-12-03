@@ -1,4 +1,6 @@
-﻿namespace NotamManagement.Core.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace NotamManagement.Core.Models;
 
 public class NotamAction
 {
@@ -9,6 +11,9 @@ public class NotamAction
     public required int OrganizationId { get; set; }    
     
     public Importance Importance { get; set; }
+
     
+    public Notam? Notam { get; set; }
+
     public string? Note { get; set; }
 }

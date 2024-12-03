@@ -32,6 +32,9 @@
                         }
                     }
                 </MudStack>
+                <MudButton Color="Color.Primary" OnClick="() => NavigateToFlightPlanDetails(context.Item.Id)">
+                    View Flight on map
+                </MudButton>
                 
             </MudCardContent>
         </MudCard>
@@ -94,5 +97,11 @@
 
 
         }
+    }
+
+    private void NavigateToFlightPlanDetails(int flightPlanId)
+    {
+        // Navigate to the details page, including the FlightPlan.Id as a query parameter
+        NavigationManager.NavigateTo($"/map?flightplan={flightPlanId}");
     }
 }

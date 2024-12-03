@@ -48,14 +48,14 @@ namespace NotamManagement.Core.Repository
 
         public async Task<IReadOnlyList<NotamAction>> FindAsync(Expression<Func<NotamAction, bool>> predicate)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            return await _dbSet.Include(x=>x.Notam).ThenInclude(x=>x.Coordinates).Where(predicate).ToListAsync();
         }
 
         public async Task<IReadOnlyList<NotamAction>> GetAllAsync(int? organizationId)
         {
             if(organizationId.HasValue)
             {
-                return await _dbSet.Where(x => x.OrganizationId == organizationId).ToListAsync();
+                return await _dbSet.Include(x=>x.Notam).ThenInclude(x=>x.Coordinates).Where(x => x.OrganizationId == organizationId).ToListAsync();
             }
             return await _dbSet.ToListAsync();
             

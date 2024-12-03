@@ -28,4 +28,11 @@ public class FlightPlanService : IFlightPlanService
 
         response.EnsureSuccessStatusCode();
     }
+
+    public async Task<FlightPlan> GetAsync(int flightPlanId)
+    {
+        var response = await httpClient.GetAsync($"/api/flightplan/id/{flightPlanId}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<FlightPlan>();
+    }
 }
