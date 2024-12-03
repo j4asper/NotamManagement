@@ -12,7 +12,25 @@ public static class NotamActionHelper
         {
             Id = 100,
             Importance = Importance.Default,
-            NotamId = 1,
+            NotamId = 8,
+            Notam = new()
+            {
+                Id = 8,
+                FIR = "FIR 1",
+                Identifier = "Identifier 1",
+                Location = "Location 1",
+                Purpose = "Purpose 1",
+                NotamOffice = "Notam Office 1",
+                Scope = "Scope 1",
+                Traffic = "Traffic 1",
+                QCode = "Q Code 1",
+                Coordinates = new()
+                {
+                    Id = 100,
+                    Latitude = 1.1f,
+                    Longitude = 1.1f
+                },
+            },
             Note = "Note 1",
             OrganizationId = 1
         },
