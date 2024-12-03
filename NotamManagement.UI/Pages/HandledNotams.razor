@@ -24,6 +24,7 @@
 {
     [Inject] public INotamActionService NotamActionService { get; set; } = null!;
     [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
     [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
     [Inject] public ApiAuthenticationStateProvider ApiAuthenticationStateProvider { get; set; } = null!;
     [Inject] public NavigationManager NavigationManager { get; set; } = null!;
@@ -50,6 +51,8 @@
     private void RemoveItemCallback(NotamAction notamAction)
     {
         NotamActions.Remove(notamAction);
+        
+        Snackbar.Add("Notam Action Deleted!", Severity.Success);
     }
     
     private void UpdateItemCallback(NotamAction notamAction)
