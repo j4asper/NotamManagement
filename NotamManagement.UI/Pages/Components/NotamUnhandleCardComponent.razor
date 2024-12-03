@@ -1,0 +1,42 @@
+<MudCard>
+    <MudCardContent>
+        <MudText>
+            <pre>
+                @NotamAction.Notam.RawNotam
+            </pre>
+        </MudText>
+    </MudCardContent>
+    @if (ShowActions)
+    {
+        <MudCardActions>
+            <MudStack Row="true" Spacing="4" StretchItems="StretchItems.All" Class="full-width">
+                <MudButton Style="width: 200px" OnClick="@UpdateNotamAction" Variant="Variant.Outlined" Color="Color.Primary">Save</MudButton>
+                <MudSelect Style="width: 300px" T="Importance" Variant="Variant.Outlined" @bind-Value="NotamAction.Importance">
+                    @foreach (Importance item in Enum.GetValues(typeof(Importance)))
+                    {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudTextField Style="width: 700px" T="string" @bind-Value="NotamAction.Note" Variant="Variant.Outlined" Placeholder="Note"/>
+            </MudStack>
+        </MudCardActions>
+    }
+</MudCard>
+
+@code {
+    [Inject] public INotamActionService NotamActionService { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    
+    [Parameter] public EventCallback<NotamAction> OnNotamActionEdited { get; set; }
+    [Parameter] public bool ShowActions { get; set; } = false;
+    [Parameter] [EditorRequired] public NotamAction NotamAction { get; set; } = null!;
+
+    private async Task UpdateNotamAction()
+    {
+        await NotamActionService.UpdateNotamAction(NotamAction);
+        
+        Snackbar.Add("Notam Action Edited!", Severity.Success);
+        
+        await OnNotamActionEdited.InvokeAsync(NotamAction);
+    }
+}

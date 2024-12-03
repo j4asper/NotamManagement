@@ -1,0 +1,69 @@
+@page "/handled"
+@attribute [Authorize]
+
+<MudText Typo="Typo.h4">Handled Notams</MudText>
+
+<MudDataGrid Items="NotamActions" Virtualize="true" Height="80vh">
+    <Columns>
+        <HierarchyColumn InitiallyExpandedFunc="_ => true"/>
+        <PropertyColumn Property="x => x.Notam.Identifier"/>
+        <PropertyColumn Property="x => x.Importance"/>
+        <PropertyColumn Property="x => x.Note"/>
+        <TemplateColumn Title="Actions">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => RemoveItemCallback(context.Item)"/>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <ChildRowContent>
+        <NotamUnhandleCardComponent NotamAction="context.Item" ShowActions="true" OnNotamActionEdited="UpdateItemCallback"/>
+    </ChildRowContent>
+</MudDataGrid>
+
+@code
+{
+    [Inject] public INotamActionService NotamActionService { get; set; } = null!;
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
+    [Inject] public ApiAuthenticationStateProvider ApiAuthenticationStateProvider { get; set; } = null!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = null!;
+
+    private List<NotamAction> NotamActions = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await LocalStorage.GetItemAsync<string>("jwt_token");
+        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var authstate = await ApiAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authstate.User;
+
+        if(!user.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/authentication/login");
+        }
+        else
+        {
+            await GetAllNotamActions();
+        }
+    }
+
+    private void RemoveItemCallback(NotamAction notamAction)
+    {
+        NotamActions.Remove(notamAction);
+    }
+    
+    private void UpdateItemCallback(NotamAction notamAction)
+    {
+        var index = NotamActions.FindIndex(n => n.Id == notamAction.Id);
+        
+        if (index != -1)
+            NotamActions[index] = notamAction;
+    }
+
+    private async Task GetAllNotamActions()
+    {
+        var result = await NotamActionService.GetAllNotamActionsAsync();
+
+        NotamActions = result.ToList();
+    }
+}
