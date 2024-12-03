@@ -1,0 +1,52 @@
+<MudCard>
+    <MudCardContent>
+        <MudText>
+            <pre>
+                @Notam.RawNotam
+            </pre>
+        </MudText>
+    </MudCardContent>
+    <MudCardActions>
+        <MudStack Row="true" Spacing="4" StretchItems="StretchItems.All" Class="full-width">
+            <MudButton Style="width: 200px" OnClick="@CreateNotamAction" Variant="Variant.Outlined" Color="Color.Primary">Handle</MudButton>
+            <MudSelect Style="width: 300px" T="Importance" Variant="Variant.Outlined" @bind-Value="@selectedImportance">
+                @foreach (Importance item in Enum.GetValues(typeof(Importance)))
+                {
+                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+            <MudTextField Style="width: 700px" T="string" @bind-Value="@note" Variant="Variant.Outlined" Placeholder="Note"/>
+        </MudStack>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Inject] public INotamActionService NotamActionService { get; set; } = null!;
+    [Inject] public ApiAuthenticationStateProvider AuthStateProvider { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    
+    [Parameter] [EditorRequired] public EventCallback<Notam> OnNotamActionCreated { get; set; }
+    [Parameter] [EditorRequired] public Notam Notam { get; set; } = null!;
+
+    private Importance selectedImportance;
+    private string note;
+
+    private async Task CreateNotamAction()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var organizationId = user.FindFirst("OrganizationId")!.Value;
+        
+        await NotamActionService.AddAsync(new NotamAction
+        {
+            OrganizationId = int.Parse(organizationId),
+            NotamId = Notam.Id,
+            Importance = selectedImportance,
+            Note = string.IsNullOrEmpty(note) ? null : note
+        });
+        
+        Snackbar.Add("Notam Action Created!", Severity.Success);
+        
+        await OnNotamActionCreated.InvokeAsync(Notam);
+    }
+}

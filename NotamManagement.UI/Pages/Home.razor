@@ -1,64 +1,35 @@
 ﻿@page "/"
 @attribute [Authorize]
-@using Microsoft.AspNetCore.Authorization
-@using System.Net.Http.Headers
-
-
 
 <PageTitle>Home</PageTitle>
 
-<MudStack Row="true">
-    <NotamListViewComponent Notams="Notams" />
-    <MudStack>
-        <MudStack Row="true">
-            <MudSelect T="string" Label="Sort by" Variant="Variant.Filled" @bind-Value="selectedFilter">
-                <MudSelectItem Value="@("Importance")">Importance</MudSelectItem>
-                <MudSelectItem Value="@("some thing")">some thing</MudSelectItem>
-                <MudSelectItem Value="@("Whatever")">Whatever</MudSelectItem>
-            </MudSelect>
-            <MudSwitch @bind-Value="showIgnored" Label="Show Ignored notams" Color="Color.Primary" />
-        </MudStack>
-        
-        <NotamActionListViewComponent  NotamActions="NotamActionsFiltered" />
-    </MudStack>
-</MudStack>
+<MudText Typo="Typo.h4">Unhandled Notams</MudText>
+
+<MudDataGrid Items="Notams" Virtualize="true" Height="80vh">
+    <Columns>
+        <HierarchyColumn InitiallyExpandedFunc="_ => true"/>
+        <PropertyColumn Property="x => x.Identifier"/>
+        <PropertyColumn Property="x => x.Type"/>
+        <PropertyColumn Property="x => x.FIR"/>
+        <PropertyColumn Property="x => x.Location"/>
+        <PropertyColumn Property="x => x.ValidFrom" Title="Valid From"/>
+        <PropertyColumn Property="x => x.ValidTo" Title="Valid To"/>
+    </Columns>
+    <ChildRowContent>
+        <NotamHandleCardComponent Notam="context.Item" OnNotamActionCreated="RemoveItemCallback"/>
+    </ChildRowContent>
+</MudDataGrid>
 
 @code
 {
     [Inject] public INotamService NotamService { get; set; } = null!;
     [Inject] public HttpClient HttpClient { get; set; } = null!;
-    [Inject] public INotamActionService notamActionService { get; set; } = null!;
     [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
     [Inject] public ApiAuthenticationStateProvider ApiAuthenticationStateProvider { get; set; } = null!;
     [Inject] public NavigationManager NavigationManager { get; set; } = null!;
-
+    
     private List<Notam> Notams = [];
-    private List<NotamAction> NotamActions = [];
-    private List<NotamAction> NotamActionsFiltered = [];
-    private string selectedFilter 
-    { 
-        get => _selectedFilter; 
-        set 
-        { 
-            _selectedFilter = value; 
-            FilterChanged(); 
-        } 
-    }
-    private string _selectedFilter;
-
-
-    private bool _showIgnored = true;
-
-    public bool showIgnored
-    {
-        get { return _showIgnored; }
-        set { _showIgnored = value;
-            ShowIgnored();
-            FilterChanged();
-        }
-    }
-
-
+    
     protected override async Task OnInitializedAsync()
     {
         var token = await LocalStorage.GetItemAsync<string>("jwt_token");
@@ -66,53 +37,21 @@
         var authstate = await ApiAuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authstate.User;
         
-        
         if(!user.Identity.IsAuthenticated)
         {
             NavigationManager.NavigateTo("/authentication/login");
         }
         else
         {
-            var notamActions = await notamActionService.GetAllNotamActionsAsync();
-            NotamActions = notamActions.ToList();
-            NotamActionsFiltered = NotamActions.ToList();
-
             await GetAllNotams();
-
         }
-
-        
     }
-
-    private void FilterChanged()
+    
+    private void RemoveItemCallback(Notam notam)
     {
-        if (_selectedFilter == "Importance")
-        {
-            NotamActionsFiltered = NotamActionsFiltered
-                .OrderBy(x =>(int) x.Importance == 2 ? 0 : x.Importance == 0 ? 1 : 2)
-                .ToList();
-        }
-        else if (_selectedFilter == "some thing")
-        {
-            NotamActionsFiltered = NotamActionsFiltered.OrderBy(x => Guid.NewGuid()).ToList();
-        }
-        StateHasChanged();
-        ShouldRender();
+        Notams.Remove(notam);
     }
-
-    private void ShowIgnored()
-    {
-        if(showIgnored == true)
-        {
-            NotamActionsFiltered = NotamActions.ToList();
-        }
-        else
-        {
-           NotamActionsFiltered.RemoveAll(x => x.Importance == Importance.Ignore);
-        }
-    }
-
-
+    
     private async Task GetAllNotams()
     {
         StateHasChanged();
@@ -138,7 +77,7 @@
                     i = 0;
                     StateHasChanged();
 
-                    await Task.Delay(10);
+                    await Task.Delay(100);
                 }
             }
         }
