@@ -16,7 +16,7 @@
         <PropertyColumn Property="x => x.ValidTo" Title="Valid To"/>
     </Columns>
     <ChildRowContent>
-        <NotamHandleCardComponent Notam="context.Item" OnNotamActionCreated="RemoveItemCallback"/>
+        <NotamHandleCardComponent Notam="context.Item" ShowActions="true" OnNotamActionCreated="RemoveItemCallback"/>
     </ChildRowContent>
 </MudDataGrid>
 
