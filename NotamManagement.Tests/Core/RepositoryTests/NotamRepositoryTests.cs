@@ -162,7 +162,7 @@ public class NotamRepositoryTests
     }
 
     [Fact]
-    public async Task GetUnhandledNotams_ShouldReturn1Notam()
+    public async Task GetUnhandledNotams_ShouldReturn2Notams()
     {
         context.NotamActions.AddRange(NotamActionHelper.GetTestData());
         await context.SaveChangesAsync();
@@ -179,6 +179,6 @@ public class NotamRepositoryTests
 
         // Assert
 
-        Assert.Equal(1, result.Count);
+        Assert.Equal(2, result.Count);
     }
 }

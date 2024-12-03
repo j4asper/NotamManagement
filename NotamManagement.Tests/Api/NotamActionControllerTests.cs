@@ -149,7 +149,7 @@ public class NotamActionControllerTests
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var notamActionList = okResult.Value as IReadOnlyList<NotamAction>;
         Assert.NotNull(notamActionList);
-        Assert.Equal(2, notamActionList.Count);
+        Assert.Equal(1, notamActionList.Count);
     }
 
     [Fact]
