@@ -23,7 +23,7 @@ else
     [Inject] public NavigationManager NavigationManager { get; set; } = null!;
     [Inject] public IFlightPlanService flightPlanService { get; set; } = null!;
     RealTimeMap? leafletMap;
-    List<Notam>? notams;
+    List<Notam>? notams = new();
     int flightPlanId = 0;
     List<RealTimeMap.StreamPoint> points = new();
     bool isLoaded = false;
@@ -49,7 +49,7 @@ else
             var n = await flightPlanService.GetAsync(flightPlanId);
             foreach(var airport in n.Airports){
                var notamact = await NotamActionService.GetNotamActionsFromLocationAsync(airport.ICAO);
-               if(notamact!=null){
+               if(notamact!=null&&notamact.Any()){
                 notams.AddRange(notamact.Where(x=>x.Notam!=null).Select(x => x.Notam).ToList());
                }
                 
