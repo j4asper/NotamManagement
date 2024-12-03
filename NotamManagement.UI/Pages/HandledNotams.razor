@@ -28,6 +28,7 @@
     [Inject] public Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
     [Inject] public ApiAuthenticationStateProvider ApiAuthenticationStateProvider { get; set; } = null!;
     [Inject] public NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] public IDialogService DialogService { get; set; } = null!;
 
     private List<NotamAction> NotamActions = [];
 
@@ -48,11 +49,25 @@
         }
     }
 
-    private void RemoveItemCallback(NotamAction notamAction)
+    private async Task RemoveItemCallback(NotamAction notamAction)
     {
-        NotamActions.Remove(notamAction);
+        var parameters = new DialogParameters<DeleteConfirmationDialog>
+        {
+            { x => x.ContentText, "Are you sure you want to delete this handled notam?" }
+        };
+
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = await DialogService.ShowAsync<DeleteConfirmationDialog>("Delete", parameters, options);
         
-        Snackbar.Add("Notam Action Deleted!", Severity.Success);
+        var result = await dialog.Result;
+        
+        if (!result.Canceled)
+        {
+            NotamActions.Remove(notamAction);
+
+            Snackbar.Add("Notam Action Deleted!", Severity.Success);
+        }
     }
     
     private void UpdateItemCallback(NotamAction notamAction)
