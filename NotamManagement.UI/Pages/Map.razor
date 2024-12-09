@@ -54,6 +54,10 @@ else
                }
             }
         }
+        else if(query["Notam"]!=null){
+            var notam = await NotamService.GetNotamAsync(int.Parse(query["Notam"]));
+            notams.Add(notam);
+        }
         else{
             var n = await NotamService.GetAllNotamsAsync();
             notams = n.ToList();
