@@ -1,12 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using NotamManagement.Core.Models;
-using Npgsql.Replication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using NotamManagement.Core.Models;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NotamManagement.Core.Services
 {
@@ -46,6 +39,13 @@ namespace NotamManagement.Core.Services
             var response = await httpClient.PutAsJsonAsync($"/api/notamaction/id/{notamAction.Id}", notamAction);
             response.EnsureSuccessStatusCode();
            
+        }
+
+        public async Task DeleteNotamAction(NotamAction notamAction)
+        {
+            var response = await httpClient.DeleteAsync($"/api/notamaction/id/{notamAction.Id}");
+            
+            response.EnsureSuccessStatusCode();
         }
     }
 }

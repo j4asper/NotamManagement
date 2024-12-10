@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NotamManagement.Core.Models;
+﻿using NotamManagement.Core.Models;
 
 namespace NotamManagement.Core.Services
 {
@@ -15,5 +10,7 @@ namespace NotamManagement.Core.Services
         Task<IReadOnlyList<NotamAction>> GetNotamActionsFromLocationAsync(string location);
 
         Task UpdateNotamAction(NotamAction notamAction);
+        
+        Task DeleteNotamAction(NotamAction notamAction);
     }
 }

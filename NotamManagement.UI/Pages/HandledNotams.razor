@@ -64,8 +64,10 @@
         
         if (!result.Canceled)
         {
+            await NotamActionService.DeleteNotamAction(notamAction);
+            
             NotamActions.Remove(notamAction);
-
+            
             Snackbar.Add("Notam Action Deleted!", Severity.Success);
         }
     }
