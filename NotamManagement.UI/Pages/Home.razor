@@ -14,6 +14,11 @@
         <PropertyColumn Property="x => x.Location"/>
         <PropertyColumn Property="x => x.ValidFrom" Title="Valid From"/>
         <PropertyColumn Property="x => x.ValidTo" Title="Valid To"/>
+        <TemplateColumn Title="Actions">
+            <CellTemplate>
+                <MudIconButton Icon="@Icons.Material.Filled.Map" Color="Color.Success" OnClick="() => NavigateToFlightPlanDetails(context.Item.Id)" />
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
     <ChildRowContent>
         <NotamHandleCardComponent Notam="context.Item" ShowActions="true" OnNotamActionCreated="RemoveItemCallback"/>
@@ -39,7 +44,7 @@
         
         if(!user.Identity.IsAuthenticated)
         {
-            NavigationManager.NavigateTo("/authentication/login");
+            NavigationManager.NavigateTo("/login");
         }
         else
         {
@@ -89,5 +94,11 @@
         {
             StateHasChanged();
         }
+    }
+
+    private void NavigateToFlightPlanDetails(int NotamId)
+    {
+        // Navigate to the details page, including the FlightPlan.Id as a query parameter
+        NavigationManager.NavigateTo($"/map?Notam={NotamId}");
     }
 }

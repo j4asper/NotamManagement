@@ -2,7 +2,7 @@
     <MudCardContent>
         <MudText>
             <pre>
-                @NotamAction.Notam.RawNotam
+                <MudHighlighter Text="@NotamAction.Notam.RawNotam"  HighlightedTexts="@specialTerms" />
             </pre>
         </MudText>
     </MudCardContent>
@@ -30,6 +30,69 @@
     [Parameter] public EventCallback<NotamAction> OnNotamActionEdited { get; set; }
     [Parameter] public bool ShowActions { get; set; } = false;
     [Parameter] [EditorRequired] public NotamAction NotamAction { get; set; } = null!;
+    private List<string> specialTerms = [ // Airspace and Navigation
+            "AD", // Aerodrome
+    "CTR", // Control Zone
+    "FIR", // Flight Information Region
+    "AWY", // Airway
+    "UTA", // Upper Control Area
+    "ATZ", // Aerodrome Traffic Zone
+
+    // Runways and Taxiways
+    "RWY", // Runway
+    "TWY", // Taxiway
+    "APRON", // Aircraft parking area
+    "CLSD", // Closed
+    "OPS", // Operations
+    "LGT", // Lighting (e.g., runway lighting)
+    "LDG", // Landing
+    "TKOF", // Takeoff
+    "RWY CLSD", // Runway Closed
+
+    // Equipment and Systems
+    "ILS", // Instrument Landing System
+    "VOR", // VHF Omnidirectional Range
+    "DME", // Distance Measuring Equipment
+    "NDB", // Non-Directional Beacon
+    "GP", // Glide Path (part of ILS)
+    "LOC", // Localizer (part of ILS)
+    "RVR", // Runway Visual Range
+
+    // Weather and Conditions
+    "WX", // Weather
+    "SIGMET", // Significant Meteorological Information
+    "SN", // Snow
+    "FZRA", // Freezing Rain
+    "TS", // Thunderstorm
+    "BR", // Mist
+    "FG", // Fog
+    "HZ", // Haze
+    "WND", // Wind
+    "TURB", // Turbulence
+    "ICG", // Icing
+
+    // Restrictions and Hazards
+    "PJE", // Parachute Jumping Exercise
+    "UAS", // Unmanned Aircraft System (drone activity)
+    "RMK", // Remarks
+    "TFR", // Temporary Flight Restriction
+    "VIP", // VIP movement or restrictions
+    "PROH", // Prohibited
+    "DNG", // Dangerous
+
+    // Other Operational Terms
+    "EOBT", // Estimated Off-Block Time
+    "ETA", // Estimated Time of Arrival
+    "ETD", // Estimated Time of Departure
+    "DEP", // Departure
+    "ARR", // Arrival
+    "TFC", // Traffic
+    "TRG", // Training
+    "FREQ", // Frequency
+    "STNR", // Stationary
+    "TEMP" // Temporary
+    ];
+
 
     private async Task UpdateNotamAction()
     {
