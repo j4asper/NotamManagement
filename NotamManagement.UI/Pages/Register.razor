@@ -10,15 +10,13 @@
 
 <h3>Register</h3>
 
-<MudForm Model="registerModel" OnValidSubmit="HandleRegister">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<MudForm Model="registerModel">
     <div>
         <MudInput @bind-Value="registerModel.Email" Placeholder="Email" Required="true"/>
-        <MudInput @bind-Value="registerModel.Password" placeholder="Password" type="password" Required="true" />
-        <MudInput @bind-Value="confirmPass" placeholder="Confirm Password" type="password" Required="true" />
+        <MudInput @bind-Value="registerModel.Password" placeholder="Password" InputType="InputType.Password" Required="true" />
+        <MudInput @bind-Value="confirmPass" placeholder="Confirm Password" InputType="InputType.Password" Required="true" />
         <MudInput @bind-Value="registerModel.FullName" placeholder="Full Name" Required="true" />
-        <MudButton type="submit">Register</MudButton>
+        <MudButton OnClick="@(()=>HandleRegister())" >Register</MudButton>
     </div>
     <label>@errorMessage</label>
 </MudForm>
