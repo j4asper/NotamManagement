@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotamManagement.Api", "NotamManagement.Api\NotamManagement.Api.csproj", "{8257A526-CA12-4455-8394-856D83313BE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotamManagement.Api", "src\NotamManagement.Api\NotamManagement.Api.csproj", "{8257A526-CA12-4455-8394-856D83313BE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotamManagement.UI", "NotamManagement.UI\NotamManagement.UI.csproj", "{D34635B7-0C6B-47CE-8C2F-6E890D4CB497}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotamManagement.UI", "src\NotamManagement.UI\NotamManagement.UI.csproj", "{D34635B7-0C6B-47CE-8C2F-6E890D4CB497}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotamManagement.Core", "NotamManagement.Core\NotamManagement.Core.csproj", "{268848B1-33F2-4A34-BB7A-7E501EE1D178}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotamManagement.Core", "src\NotamManagement.Core\NotamManagement.Core.csproj", "{268848B1-33F2-4A34-BB7A-7E501EE1D178}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotamManagement.Tests", "NotamManagement.Tests\NotamManagement.Tests.csproj", "{BA8744C0-51F7-4559-97DF-2FB85D70811A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotamManagement.Tests", "src\NotamManagement.Tests\NotamManagement.Tests.csproj", "{BA8744C0-51F7-4559-97DF-2FB85D70811A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
